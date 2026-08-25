@@ -1,0 +1,20 @@
+# Python (backend)
+backend/venv/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Environment files - never commit real secrets.
+# (frontend/ and backend/ also carry their own .gitignore for tool-specific
+# artifacts; this rule applies repo-wide.)
+.env
+.env.local
+.env.*.local
+!**/.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
