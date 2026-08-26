@@ -46,7 +46,7 @@ def make_user_and_preference(db_session, email="insight@example.com") -> tuple[U
 def empty_prices():
     from datetime import datetime, timezone
 
-    return PricesResponse(items=[], status="live", generated_at=datetime.now(timezone.utc))
+    return PricesResponse(items=[], status="live", generated_at=datetime.now(timezone.utc), content_key="prices::2026-01-01")
 
 
 def empty_news():
@@ -204,6 +204,7 @@ class TestContextConstruction:
             ],
             status="live",
             generated_at="2026-01-01T00:00:00Z",
+            content_key="prices:bitcoin:2026-01-01",
         )
         news = NewsResponse(items=[], status="fallback", generated_at="2026-01-01T00:00:00Z")
 
@@ -217,7 +218,7 @@ class TestContextConstruction:
         preference = UserPreference(
             user_id=uuid.uuid4(), interested_assets=["bitcoin"], investor_type="hodler", content_types=["fun"]
         )
-        prices = PricesResponse(items=[], status="live", generated_at="2026-01-01T00:00:00Z")
+        prices = PricesResponse(items=[], status="live", generated_at="2026-01-01T00:00:00Z", content_key="prices::2026-01-01")
         news = NewsResponse(
             items=[
                 {
@@ -230,6 +231,7 @@ class TestContextConstruction:
                     "related_assets": [],
                     "data_source": "cryptopanic",
                     "is_fallback": False,
+                    "content_key": "news:cryptopanic:1",
                 }
             ],
             status="live",

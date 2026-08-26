@@ -1,26 +1,120 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --radius: 0.75rem;
+
+  --background: oklch(0.976 0.004 286.32);
+  --foreground: oklch(0.21 0.02 270);
+  --surface: oklch(1 0 0);
+  --surface-border: oklch(0.91 0.005 286.29);
+  --muted: oklch(0.55 0.015 270);
+
+  --accent: oklch(0.51 0.23 277.02);
+  --accent-hover: oklch(0.46 0.23 277.02);
+  --accent-foreground: oklch(0.97 0.01 286.38);
+  --accent-soft: oklch(0.951 0.026 285.5);
+
+  --success: oklch(0.627 0.194 149.21);
+  --success-soft: oklch(0.96 0.03 149.21);
+  --danger: oklch(0.577 0.245 27.325);
+  --danger-soft: oklch(0.96 0.03 27.325);
+
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.04), 0 4px 12px -4px rgb(0 0 0 / 0.05);
+  --shadow-card-hover: 0 2px 4px 0 rgb(0 0 0 / 0.05), 0 10px 24px -8px rgb(0 0 0 / 0.09);
+}
+
+.dark {
+  --background: oklch(0.157 0.012 272);
+  --foreground: oklch(0.955 0.006 286.31);
+  --surface: oklch(0.197 0.014 272);
+  --surface-border: oklch(0.29 0.014 272);
+  --muted: oklch(0.7 0.01 270);
+
+  --accent: oklch(0.65 0.19 277.5);
+  --accent-hover: oklch(0.71 0.19 277.5);
+  --accent-foreground: oklch(0.16 0.02 272);
+  --accent-soft: oklch(0.27 0.05 278);
+
+  --success: oklch(0.696 0.17 162.48);
+  --success-soft: oklch(0.27 0.05 162.48);
+  --danger: oklch(0.704 0.191 22.216);
+  --danger-soft: oklch(0.3 0.06 22.216);
+
+  --shadow-card: 0 1px 2px 0 rgb(0 0 0 / 0.25), 0 4px 12px -4px rgb(0 0 0 / 0.25);
+  --shadow-card-hover: 0 2px 4px 0 rgb(0 0 0 / 0.3), 0 10px 24px -8px rgb(0 0 0 / 0.35);
 }
 
 @theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-border: var(--surface-border);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-sans: var(--font-figtree);
+  --font-heading: var(--font-sora);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-family: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
+}
+@utility shadow-card-hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@utility animate-fade-up {
+  animation: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@utility stagger-1 {
+  animation-delay: 0.08s;
+}
+@utility stagger-2 {
+  animation-delay: 0.16s;
+}
+@utility stagger-3 {
+  animation-delay: 0.24s;
+}
+@utility stagger-4 {
+  animation-delay: 0.32s;
 }

@@ -1,3 +1,5 @@
+import { Check } from "lucide-react";
+
 interface SelectableOption {
   id: string;
   label: string;
@@ -11,17 +13,17 @@ interface SelectableGridProps {
 }
 
 /**
- * A grid of toggleable option buttons, used for both multi-select (asset /
+ * A row of toggleable chip buttons, used for both multi-select (asset /
  * content-type questions) and single-select (investor type) onboarding
  * questions -- the caller decides what "toggle" means for its own state.
  *
  * Real `<button>` elements (keyboard-accessible by default) and
- * `aria-pressed` communicate selection state; a checkmark is included so
- * selection is never conveyed by color alone.
+ * `aria-pressed` communicate selection state; a checkmark icon is
+ * included so selection is never conveyed by color alone.
  */
 export function SelectableGrid({ options, selectedIds, onToggle }: SelectableGridProps) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+    <div className="flex flex-wrap gap-2.5">
       {options.map((option) => {
         const isSelected = selectedIds.includes(option.id);
         return (
@@ -30,17 +32,17 @@ export function SelectableGrid({ options, selectedIds, onToggle }: SelectableGri
             type="button"
             aria-pressed={isSelected}
             onClick={() => onToggle(option.id)}
-            className={`flex flex-col items-center gap-0.5 rounded-lg border px-4 py-3 text-sm font-medium transition-colors ${
+            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-medium transition-all active:scale-[0.97] ${
               isSelected
-                ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
-                : "border-zinc-300 hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-500"
+                ? "border-accent bg-accent-soft text-accent"
+                : "border-surface-border bg-surface text-foreground hover:border-accent/40 hover:bg-accent-soft/40"
             }`}
           >
             <span>
-              {isSelected ? "✓ " : ""}
               {option.label}
+              {option.sublabel && <span className="text-muted"> ({option.sublabel})</span>}
             </span>
-            {option.sublabel && <span className="text-xs opacity-70">{option.sublabel}</span>}
+            {isSelected && <Check className="h-3.5 w-3.5" />}
           </button>
         );
       })}

@@ -8,9 +8,9 @@ thumbs up/down.
 
 > **Status: early scaffold.** Project foundation, the database schema,
 > authentication, onboarding, the CoinGecko/CryptoPanic integrations, the
-> daily AI insight, and the dashboard (all four mandatory sections, with
-> real personalized ordering) are built and verified. Feedback voting and
-> deployment are not implemented yet - see
+> daily AI insight, the dashboard (all four mandatory sections, with real
+> personalized ordering), and thumbs-up/thumbs-down feedback on every
+> section are built and verified. Deployment is not done yet - see
 > [Known limitations](#known-limitations).
 
 ## Product
@@ -117,8 +117,11 @@ per-user isolation), the CoinGecko/CryptoPanic integrations
 the daily AI insight (grounding in real price/news data, prompt-injection
 containment, safety-phrase rejection, daily reuse, non-persisted fallback -
 see [Skills/generate-ai-insights/SKILL.md](Skills/generate-ai-insights/SKILL.md)),
-and the meme endpoint (public, valid catalog shape - see
-[Skills/build-crypto-dashboard/SKILL.md](Skills/build-crypto-dashboard/SKILL.md)).
+the meme endpoint (public, valid catalog shape - see
+[Skills/build-crypto-dashboard/SKILL.md](Skills/build-crypto-dashboard/SKILL.md)),
+and feedback (upsert, ownership, content-key validation, cross-user
+isolation - see
+[Skills/manage-content-feedback/SKILLS.md](Skills/manage-content-feedback/SKILLS.md)).
 The database/auth/preferences/market-route/insight-route tests require a
 real PostgreSQL instance reachable via `DATABASE_URL` and are skipped
 automatically if none is reachable; the provider-client and service-layer
@@ -133,9 +136,10 @@ npm test
 ```
 
 Covers the login/signup forms, the `ProtectedRoute` redirect logic, the
-onboarding questionnaire, and the dashboard's four sections (loading,
-partial failure, fallback labeling, and the personalization-driven
-section ordering).
+onboarding questionnaire, the dashboard's four sections (loading, partial
+failure, fallback labeling, personalization-driven ordering), and the
+reusable feedback buttons (selected state, optimistic update, rollback on
+failure).
 
 ## Production build
 
@@ -160,16 +164,35 @@ documented here once the database and dashboard are built.
 ## Known limitations
 
 This is an early-stage scaffold. Signup, login, JWT-protected endpoints,
-the onboarding questionnaire, and the full four-section dashboard (coin
-prices, market news, daily AI insight, crypto meme) all work end-to-end.
-Not yet implemented: feedback voting (thumbs up/down) and deployment.
-There is no password-reset or email-verification flow, and no dedicated
-"edit preferences later" settings page yet (the onboarding form itself
-would need to be reused for that - out of scope until requested).
+the onboarding questionnaire, the full four-section dashboard (coin
+prices, market news, daily AI insight, crypto meme), and thumbs-up/down
+feedback on every section all work end-to-end. Deployment is the only
+remaining piece. There is no password-reset or email-verification flow,
+and no dedicated "edit preferences later" settings page yet (the
+onboarding form itself would need to be reused for that - out of scope
+until requested).
 
-**Meme images** are 4 small original SVG graphics created for this
-project (`frontend/public/memes/`), not scraped or hotlinked, to avoid
-copyright and reliability issues with external meme sources.
+**Feedback content keys** (documented decision): market news is voted
+per-article; coin prices, the AI insight, and the meme are voted as a
+whole section/item, not per sub-element. A fallback AI insight (no
+`OPENROUTER_API_KEY`, or a provider failure) has no feedback controls,
+since it was never saved and there is nothing to attach a vote to.
+
+**Meme images** are 6 original illustrations generated with Google
+Gemini specifically for this project (`frontend/public/memes/`, resized
+and compressed to WebP, ~25-40 KB each) - not scraped, hotlinked, or
+using any real coin/brand logos, to avoid copyright and reliability
+issues with external meme sources. The uncompressed source exports live
+in `frontend/images/` (git-ignored, not part of the deployed app).
+
+**Site-wide illustrations**: a consistent cartoon bull mascot (also
+Gemini-generated, same pipeline as the memes) appears across the app for
+branding and empty/edge states, not just the meme section -
+`frontend/public/illustrations/`: the landing-page hero, the shared
+login/signup split panel, the onboarding banner, an empty-state graphic
+reused by both the "no assets selected" and "no news available" states,
+the onboarding "All set!" celebration screen shown briefly before the
+dashboard redirect, and the custom 404 page.
 
 **Dashboard personalization**: section order responds to the user's saved
 `content_types` (`charts` -> Coin Prices earlier, `market_news` -> Market

@@ -37,6 +37,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Raw/source image exports (large, unoptimized) -- the actual assets the
+# app serves live in public/memes/ after being resized and compressed.
+/images
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

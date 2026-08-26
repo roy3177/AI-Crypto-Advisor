@@ -165,6 +165,7 @@ def _to_response(insight: DailyInsight) -> DailyInsightResponse:
         source="ai",
         model_provider=insight.model_provider,
         generated_at=insight.created_at,
+        content_key=f"insight:{insight.id}",
     )
 
 

@@ -2,25 +2,37 @@
   {
     "id": "diamond-hands-01",
     "title": "Diamond hands",
-    "image_url": "/memes/diamond-hands-01.svg",
-    "alt_text": "Cartoon diamond with the caption HODL, representing holding through market volatility"
+    "image_url": "/memes/diamond-hands-01.webp",
+    "alt_text": "A friendly cartoon robot hand carefully holding a glowing diamond-shaped coin, representing holding through market volatility"
   },
   {
     "id": "to-the-moon-01",
     "title": "To the moon",
-    "image_url": "/memes/to-the-moon-01.svg",
-    "alt_text": "Cartoon rocket flying toward the moon with the caption To The Moon"
+    "image_url": "/memes/to-the-moon-01.webp",
+    "alt_text": "A coin-shaped rocket blasting off with a trail of sparkles toward a crescent moon and stars"
   },
   {
     "id": "buy-the-dip-01",
     "title": "Buy the dip",
-    "image_url": "/memes/buy-the-dip-01.svg",
-    "alt_text": "A simple line chart dipping down then recovering, with the caption Buy The Dip"
+    "image_url": "/memes/buy-the-dip-01.webp",
+    "alt_text": "A cartoon character excitedly reaching out with a shopping basket to catch a coin at the bottom of a dip in a price chart"
   },
   {
     "id": "number-go-up-01",
     "title": "Number go up",
-    "image_url": "/memes/number-go-up-01.svg",
-    "alt_text": "A simple line chart trending upward with the caption Number Go Up"
+    "image_url": "/memes/number-go-up-01.webp",
+    "alt_text": "A cartoon bull happily riding a skateboard up a steep rising price-chart line"
+  },
+  {
+    "id": "stay-calm-01",
+    "title": "Stay calm",
+    "image_url": "/memes/stay-calm-01.webp",
+    "alt_text": "A cartoon bull calmly meditating cross-legged while a red downward chart arrow floats harmlessly in the background"
+  },
+  {
+    "id": "bull-vs-bear-01",
+    "title": "Bull vs. bear",
+    "image_url": "/memes/bull-vs-bear-01.webp",
+    "alt_text": "A cute cartoon bull and bear playfully arm-wrestling on top of a large coin"
   }
 ]

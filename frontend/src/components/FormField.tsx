@@ -1,3 +1,5 @@
+import { inputClassName } from "@/components/ui/styles";
+
 interface FormFieldProps {
   label: string;
   type?: string;
@@ -12,7 +14,7 @@ interface FormFieldProps {
  * and behavior only need to be defined once. */
 export function FormField({ label, type = "text", value, onChange, required, minLength, autoComplete }: FormFieldProps) {
   return (
-    <label className="flex flex-col gap-1 text-sm">
+    <label className="flex flex-col gap-1.5 text-sm font-medium">
       {label}
       <input
         type={type}
@@ -21,7 +23,7 @@ export function FormField({ label, type = "text", value, onChange, required, min
         required={required}
         minLength={minLength}
         autoComplete={autoComplete}
-        className="rounded border border-zinc-300 px-3 py-2 text-base dark:border-zinc-700 dark:bg-zinc-900"
+        className={inputClassName}
       />
     </label>
   );

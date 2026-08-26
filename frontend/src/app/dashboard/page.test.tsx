@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import "@/test/navigation-mock";
@@ -13,6 +13,8 @@ import "@/test/memes-api-mock";
 import { memesApiMock } from "@/test/memes-api-mock";
 import "@/test/preferences-api-mock";
 import { preferencesApiMock } from "@/test/preferences-api-mock";
+import "@/test/feedback-api-mock";
+import { feedbackApiMock } from "@/test/feedback-api-mock";
 import { ApiError } from "@/lib/api-client";
 
 import DashboardPage from "./page";
@@ -35,6 +37,7 @@ describe("DashboardPage", () => {
     source: "ai" as const,
     model_provider: "openrouter",
     generated_at: "",
+    content_key: "insight:insight-1",
   };
 
   const defaultMeme = {
@@ -42,6 +45,7 @@ describe("DashboardPage", () => {
     title: "Diamond hands",
     image_url: "/memes/diamond-hands-01.svg",
     alt_text: "A cartoon diamond with the caption HODL",
+    content_key: "meme:diamond-hands-01",
   };
 
   beforeEach(() => {
@@ -50,6 +54,7 @@ describe("DashboardPage", () => {
     marketApiMock.fetchNews.mockReset();
     insightsApiMock.fetchDailyInsight.mockReset().mockResolvedValue(defaultInsight);
     memesApiMock.fetchRandomMeme.mockReset().mockResolvedValue(defaultMeme);
+    feedbackApiMock.fetchMyFeedback.mockReset().mockResolvedValue([]);
     preferencesApiMock.fetchMyPreferences.mockReset().mockResolvedValue({
       interested_assets: ["bitcoin"],
       investor_type: "hodler",
@@ -66,7 +71,7 @@ describe("DashboardPage", () => {
       isLoading: false,
       logout: vi.fn(),
     });
-    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "" });
+    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "", content_key: "prices::2026-01-01" });
     marketApiMock.fetchNews.mockResolvedValue({ items: [], status: "fallback", generated_at: "" });
 
     render(<DashboardPage />);
@@ -80,10 +85,11 @@ describe("DashboardPage", () => {
       ],
       status: "live",
       generated_at: "",
+      content_key: "prices:bitcoin:2026-01-01",
     });
     marketApiMock.fetchNews.mockResolvedValue({
       items: [
-        { id: "a1", title: "Bitcoin rallies", summary: null, url: null, published_at: null, source_name: "Example", related_assets: [], data_source: "cryptopanic", is_fallback: false },
+        { id: "a1", title: "Bitcoin rallies", summary: null, url: null, published_at: null, source_name: "Example", related_assets: [], data_source: "cryptopanic", is_fallback: false, content_key: "news:cryptopanic:a1" },
       ],
       status: "live",
       generated_at: "",
@@ -99,7 +105,7 @@ describe("DashboardPage", () => {
     marketApiMock.fetchPrices.mockRejectedValue(new ApiError("Could not load prices.", 500));
     marketApiMock.fetchNews.mockResolvedValue({
       items: [
-        { id: "a1", title: "Still works", summary: null, url: null, published_at: null, source_name: null, related_assets: [], data_source: "cryptopanic", is_fallback: false },
+        { id: "a1", title: "Still works", summary: null, url: null, published_at: null, source_name: null, related_assets: [], data_source: "cryptopanic", is_fallback: false, content_key: "news:cryptopanic:a1" },
       ],
       status: "live",
       generated_at: "",
@@ -112,7 +118,7 @@ describe("DashboardPage", () => {
   });
 
   it("shows the AI insight content and disclaimer", async () => {
-    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "" });
+    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "", content_key: "prices::2026-01-01" });
     marketApiMock.fetchNews.mockResolvedValue({ items: [], status: "fallback", generated_at: "" });
 
     render(<DashboardPage />);
@@ -121,8 +127,8 @@ describe("DashboardPage", () => {
     expect(screen.getByText(/informational purposes only/i)).toBeInTheDocument();
   });
 
-  it("labels a fallback AI insight as temporarily unavailable", async () => {
-    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "" });
+  it("labels a fallback AI insight as temporarily unavailable and hides feedback controls", async () => {
+    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "", content_key: "prices::2026-01-01" });
     marketApiMock.fetchNews.mockResolvedValue({ items: [], status: "fallback", generated_at: "" });
     insightsApiMock.fetchDailyInsight.mockResolvedValue({
       id: null,
@@ -133,15 +139,21 @@ describe("DashboardPage", () => {
       source: "fallback",
       model_provider: null,
       generated_at: "",
+      content_key: null,
     });
 
     render(<DashboardPage />);
 
     expect(await screen.findByText("Temporarily unavailable")).toBeInTheDocument();
+    // No saved insight to vote on -- feedback controls must not appear
+    // inside the insight section specifically (other sections still have
+    // their own thumbs-up buttons).
+    const insightSection = screen.getByText("Your daily crypto insight").closest("section")!;
+    expect(within(insightSection).queryByRole("button", { name: "Thumbs up" })).not.toBeInTheDocument();
   });
 
   it("shows the meme with its alt text", async () => {
-    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "" });
+    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "", content_key: "prices::2026-01-01" });
     marketApiMock.fetchNews.mockResolvedValue({ items: [], status: "fallback", generated_at: "" });
 
     render(<DashboardPage />);
@@ -151,7 +163,7 @@ describe("DashboardPage", () => {
   });
 
   it("moves a preferred section earlier based on saved content preferences", async () => {
-    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "" });
+    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "", content_key: "prices::2026-01-01" });
     marketApiMock.fetchNews.mockResolvedValue({ items: [], status: "fallback", generated_at: "" });
     preferencesApiMock.fetchMyPreferences.mockResolvedValue({
       interested_assets: ["bitcoin"],
@@ -169,7 +181,7 @@ describe("DashboardPage", () => {
   });
 
   it("shows a personalization summary once preferences load", async () => {
-    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "" });
+    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "", content_key: "prices::2026-01-01" });
     marketApiMock.fetchNews.mockResolvedValue({ items: [], status: "fallback", generated_at: "" });
 
     render(<DashboardPage />);
@@ -178,10 +190,10 @@ describe("DashboardPage", () => {
   });
 
   it("labels fallback news as offline content", async () => {
-    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "" });
+    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "", content_key: "prices::2026-01-01" });
     marketApiMock.fetchNews.mockResolvedValue({
       items: [
-        { id: "fallback-1", title: "Educational content", summary: null, url: null, published_at: null, source_name: "Crypto Advisor", related_assets: [], data_source: "static_fallback", is_fallback: true },
+        { id: "fallback-1", title: "Educational content", summary: null, url: null, published_at: null, source_name: "Crypto Advisor", related_assets: [], data_source: "static_fallback", is_fallback: true, content_key: "news:static_fallback:fallback-1" },
       ],
       status: "fallback",
       generated_at: "",
@@ -190,5 +202,41 @@ describe("DashboardPage", () => {
     render(<DashboardPage />);
 
     expect(await screen.findByText(/offline content/i)).toBeInTheDocument();
+  });
+
+  it("shows feedback controls in every one of the four sections", async () => {
+    marketApiMock.fetchPrices.mockResolvedValue({
+      items: [{ id: "bitcoin", symbol: "BTC", name: "Bitcoin", price_usd: 100000, change_24h_percent: 1, last_updated: null, source: "coingecko", is_stale: false }],
+      status: "live",
+      generated_at: "",
+      content_key: "prices:bitcoin:2026-01-01",
+    });
+    marketApiMock.fetchNews.mockResolvedValue({
+      items: [{ id: "a1", title: "Headline", summary: null, url: null, published_at: null, source_name: null, related_assets: [], data_source: "cryptopanic", is_fallback: false, content_key: "news:cryptopanic:a1" }],
+      status: "live",
+      generated_at: "",
+    });
+
+    render(<DashboardPage />);
+    await screen.findByText("Headline");
+
+    // 1 news article + prices + insight + meme = 4 feedback groups.
+    const thumbsUpButtons = await screen.findAllByRole("button", { name: "Thumbs up" });
+    expect(thumbsUpButtons).toHaveLength(4);
+  });
+
+  it("restores a previously saved vote for the meme section", async () => {
+    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "", content_key: "prices::2026-01-01" });
+    marketApiMock.fetchNews.mockResolvedValue({ items: [], status: "fallback", generated_at: "" });
+    feedbackApiMock.fetchMyFeedback.mockResolvedValue([
+      { section_type: "crypto_meme", content_key: "meme:diamond-hands-01", vote: 1, updated_at: "" },
+    ]);
+
+    render(<DashboardPage />);
+    await screen.findByText("Diamond hands");
+
+    const memeSection = screen.getByText("Fun Crypto Meme").closest("section")!;
+    const { getByRole } = within(memeSection);
+    expect(getByRole("button", { name: "Thumbs up" })).toHaveAttribute("aria-pressed", "true");
   });
 });

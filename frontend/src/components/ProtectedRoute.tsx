@@ -26,7 +26,7 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
   if (isLoading || !user) {
     return (
       <main className="flex min-h-screen items-center justify-center">
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">Loading...</p>
+        <p className="text-sm text-muted">Loading...</p>
       </main>
     );
   }

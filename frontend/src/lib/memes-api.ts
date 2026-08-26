@@ -5,6 +5,7 @@ export interface Meme {
   title: string;
   image_url: string;
   alt_text: string;
+  content_key: string;
 }
 
 export function fetchRandomMeme(): Promise<Meme> {

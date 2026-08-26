@@ -36,6 +36,9 @@ class PricesResponse(BaseModel):
     items: list[CoinPrice]
     status: PriceStatus
     generated_at: datetime
+    # Feedback target for the whole section (not per-coin) -- see
+    # Skills/manage-content-feedback/SKILLS.md's documented decision.
+    content_key: str
 
 
 class NewsArticle(BaseModel):
@@ -48,6 +51,8 @@ class NewsArticle(BaseModel):
     related_assets: list[str] = []
     data_source: str
     is_fallback: bool = False
+    # Feedback target for this specific article.
+    content_key: str
 
     @field_validator("url")
     @classmethod

@@ -18,6 +18,8 @@ export interface PricesResponse {
   items: CoinPrice[];
   status: "live" | "cached" | "unavailable";
   generated_at: string;
+  /** Feedback target for the whole section (not per-coin). */
+  content_key: string;
 }
 
 export interface NewsArticle {
@@ -30,6 +32,7 @@ export interface NewsArticle {
   related_assets: string[];
   data_source: string;
   is_fallback: boolean;
+  content_key: string;
 }
 
 export interface NewsResponse {

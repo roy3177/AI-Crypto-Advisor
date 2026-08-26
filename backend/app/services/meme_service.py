@@ -21,4 +21,4 @@ def _load_memes() -> list[dict]:
 def get_random_meme() -> MemeResponse:
     memes = _load_memes()
     chosen = random.choice(memes)
-    return MemeResponse(**chosen)
+    return MemeResponse(**chosen, content_key=f"meme:{chosen['id']}")

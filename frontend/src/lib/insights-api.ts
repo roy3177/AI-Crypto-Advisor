@@ -12,6 +12,8 @@ export interface DailyInsight {
   source: "ai" | "fallback";
   model_provider: string | null;
   generated_at: string;
+  /** `null` for a non-persisted fallback -- there is nothing to vote on. */
+  content_key: string | null;
 }
 
 export function fetchDailyInsight(): Promise<DailyInsight> {

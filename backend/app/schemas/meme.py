@@ -6,3 +6,4 @@ class MemeResponse(BaseModel):
     title: str
     image_url: str
     alt_text: str
+    content_key: str

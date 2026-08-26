@@ -39,6 +39,17 @@ def _news_cache_key(coin_ids: list[str]) -> str:
     return "news:" + ",".join(sorted(coin_ids)) if coin_ids else "news:general"
 
 
+def _prices_content_key(coin_ids: list[str]) -> str:
+    """Feedback target for the whole prices section (not per-coin) -- see
+    Skills/manage-content-feedback/SKILLS.md's documented decision."""
+    today = datetime.now(timezone.utc).date().isoformat()
+    return f"prices:{','.join(sorted(coin_ids))}:{today}"
+
+
+def _news_content_key(data_source: str, article_id: str) -> str:
+    return f"news:{data_source}:{article_id}"
+
+
 def _load_fallback_news() -> list[dict]:
     with _FALLBACK_NEWS_PATH.open(encoding="utf-8") as f:
         return json.load(f)
@@ -56,6 +67,7 @@ def _fallback_news_response() -> NewsResponse:
             related_assets=item.get("related_assets", []),
             data_source="static_fallback",
             is_fallback=True,
+            content_key=_news_content_key("static_fallback", item["id"]),
         )
         for item in _load_fallback_news()
     ]
@@ -63,8 +75,10 @@ def _fallback_news_response() -> NewsResponse:
 
 
 async def get_prices(coin_ids: list[str], client: CoinGeckoClient | None = None) -> PricesResponse:
+    content_key = _prices_content_key(coin_ids)
+
     if not coin_ids:
-        return PricesResponse(items=[], status="live", generated_at=datetime.now(timezone.utc))
+        return PricesResponse(items=[], status="live", generated_at=datetime.now(timezone.utc), content_key=content_key)
 
     cache_key = _price_cache_key(coin_ids)
     cached = _price_cache.get(cache_key)
@@ -77,7 +91,9 @@ async def get_prices(coin_ids: list[str], client: CoinGeckoClient | None = None)
         raw = await active_client.get_simple_prices(coin_ids)
     except ProviderError as exc:
         logger.warning("coingecko_unavailable error=%s", exc)
-        return PricesResponse(items=[], status="unavailable", generated_at=datetime.now(timezone.utc))
+        return PricesResponse(
+            items=[], status="unavailable", generated_at=datetime.now(timezone.utc), content_key=content_key
+        )
     finally:
         if owns_client:
             await active_client.aclose()
@@ -105,7 +121,7 @@ async def get_prices(coin_ids: list[str], client: CoinGeckoClient | None = None)
             )
         )
 
-    result = PricesResponse(items=items, status="live", generated_at=datetime.now(timezone.utc))
+    result = PricesResponse(items=items, status="live", generated_at=datetime.now(timezone.utc), content_key=content_key)
     _price_cache.set(cache_key, result, settings.price_cache_ttl_seconds)
     return result
 
@@ -158,6 +174,7 @@ async def get_news(coin_ids: list[str], client: CryptoNewsClient | None = None) 
                 related_assets=related,
                 data_source="cryptopanic",
                 is_fallback=False,
+                content_key=_news_content_key("cryptopanic", post_id),
             )
         )
 

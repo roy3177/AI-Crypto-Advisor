@@ -8,7 +8,7 @@ lives in `app/services/*` -- this file should stay small forever.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import auth, health, insights, market, memes, preferences
+from app.api.routes import auth, feedback, health, insights, market, memes, preferences
 from app.core.config import get_settings
 
 settings = get_settings()
@@ -34,6 +34,7 @@ app.include_router(preferences.router, prefix="/api/preferences")
 app.include_router(market.router, prefix="/api/market")
 app.include_router(insights.router, prefix="/api/insights")
 app.include_router(memes.router, prefix="/api/memes")
+app.include_router(feedback.router, prefix="/api/feedback")
 
 # Future routers (all under /api, added in later phases):
 # app.include_router(market.router, prefix="/api/market", tags=["market"])

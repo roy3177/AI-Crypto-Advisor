@@ -8,11 +8,15 @@
  * If the user already has saved preferences (e.g. they navigate back here
  * deliberately), the existing answers are preloaded.
  */
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { AppHeader } from "@/components/AppHeader";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { SelectableGrid } from "@/components/SelectableGrid";
+import { Button } from "@/components/ui/Button";
 import { ApiError } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
 import { fetchMyPreferences, fetchPreferenceOptions, saveMyPreferences, type PreferenceOptions } from "@/lib/preferences-api";
@@ -28,7 +32,7 @@ export default function OnboardingPage() {
 }
 
 function OnboardingContent() {
-  const { user, logout, refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
   const router = useRouter();
 
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -42,6 +46,7 @@ function OnboardingContent() {
   const [stepError, setStepError] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   // Already-onboarded users shouldn't see this form -- send them straight
   // to the dashboard instead.
@@ -131,8 +136,16 @@ function OnboardingContent() {
         investor_type: investorType,
         content_types: contentTypes,
       });
-      await refreshUser();
-      router.push("/dashboard");
+      // Brief celebration moment before handing off to the dashboard --
+      // preferences are already saved at this point. `refreshUser` is
+      // deliberately delayed until after the celebration: updating
+      // `user.onboarding_completed` earlier would trigger the
+      // already-onboarded redirect effect above immediately, skipping
+      // the celebration screen entirely.
+      setShowCelebration(true);
+      setTimeout(() => {
+        refreshUser().finally(() => router.push("/dashboard"));
+      }, 1400);
     } catch (err) {
       setSubmitError(err instanceof ApiError ? err.message : "Could not save your preferences. Please try again.");
     } finally {
@@ -143,96 +156,122 @@ function OnboardingContent() {
   if (isLoadingData || !options) {
     return (
       <main className="flex min-h-screen items-center justify-center">
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">Loading...</p>
+        <p className="text-sm text-muted">Loading...</p>
+      </main>
+    );
+  }
+
+  if (showCelebration) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-8 text-center">
+        <Image
+          src="/illustrations/celebration.webp"
+          alt="A cartoon bull mascot jumping happily with confetti and fireworks"
+          width={480}
+          height={480}
+          priority
+          className="w-full max-w-[220px]"
+        />
+        <h1 className="text-xl font-semibold tracking-tight">All set!</h1>
+        <p className="text-sm text-muted">Taking you to your dashboard...</p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-6 p-8">
-      <div className="text-center">
-        <h1 className="text-2xl font-semibold">Personalize your crypto dashboard</h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Tell us what interests you so we can tailor your daily crypto content.
-        </p>
-        <p className="mt-3 text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
-          Step {step} of {TOTAL_STEPS}
-        </p>
-      </div>
+    <div className="mx-auto flex min-h-screen max-w-lg flex-col gap-6 p-8">
+      <AppHeader />
 
-      {step === 1 && (
-        <fieldset className="flex flex-col gap-3">
-          <legend className="mb-1 text-sm font-medium">What crypto assets are you interested in?</legend>
-          <SelectableGrid
-            options={options.assets.map((a) => ({ id: a.id, label: a.label, sublabel: a.symbol }))}
-            selectedIds={interestedAssets}
-            onToggle={toggleAsset}
-          />
-        </fieldset>
-      )}
+      <main className="flex flex-1 flex-col justify-center gap-6">
+        <Image
+          src="/illustrations/onboarding-banner.webp"
+          alt="A cartoon bull mascot pointing at a checklist on a clipboard"
+          width={1040}
+          height={580}
+          priority
+          className="mx-auto w-full max-w-sm"
+        />
+        <div className="text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">Personalize your crypto dashboard</h1>
+          <p className="mt-1 text-sm text-muted">
+            Tell us what interests you so we can tailor your daily crypto content.
+          </p>
+        </div>
 
-      {step === 2 && (
-        <fieldset className="flex flex-col gap-3">
-          <legend className="mb-1 text-sm font-medium">What type of investor are you?</legend>
-          <SelectableGrid
-            options={options.investor_types}
-            selectedIds={investorType ? [investorType] : []}
-            onToggle={(id) => setInvestorType(id)}
-          />
-        </fieldset>
-      )}
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex gap-1.5">
+            {Array.from({ length: TOTAL_STEPS }, (_, index) => (
+              <span
+                key={index}
+                className={`h-1.5 w-8 rounded-full ${index < step ? "bg-accent" : "bg-surface-border"}`}
+              />
+            ))}
+          </div>
+          <p className="text-xs font-medium uppercase tracking-wide text-muted">
+            Step {step} of {TOTAL_STEPS}
+          </p>
+        </div>
 
-      {step === 3 && (
-        <fieldset className="flex flex-col gap-3">
-          <legend className="mb-1 text-sm font-medium">What kind of content would you like to see?</legend>
-          <SelectableGrid options={options.content_types} selectedIds={contentTypes} onToggle={toggleContentType} />
-        </fieldset>
-      )}
+        <div className="rounded-xl border border-surface-border bg-surface p-6 shadow-card">
+          <div key={step} className="animate-fade-up">
+          {step === 1 && (
+            <fieldset className="flex flex-col gap-3">
+              <legend className="mb-1 text-sm font-medium">What crypto assets are you interested in?</legend>
+              <SelectableGrid
+                options={options.assets.map((a) => ({ id: a.id, label: a.label, sublabel: a.symbol }))}
+                selectedIds={interestedAssets}
+                onToggle={toggleAsset}
+              />
+            </fieldset>
+          )}
 
-      {stepError && (
-        <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">
-          {stepError}
-        </p>
-      )}
-      {submitError && (
-        <p role="alert" className="text-center text-sm text-red-600 dark:text-red-400">
-          {submitError}
-        </p>
-      )}
+          {step === 2 && (
+            <fieldset className="flex flex-col gap-3">
+              <legend className="mb-1 text-sm font-medium">What type of investor are you?</legend>
+              <SelectableGrid
+                options={options.investor_types}
+                selectedIds={investorType ? [investorType] : []}
+                onToggle={(id) => setInvestorType(id)}
+              />
+            </fieldset>
+          )}
 
-      <div className="flex justify-between gap-3">
-        <button
-          type="button"
-          onClick={goBack}
-          disabled={step === 1}
-          className="rounded px-4 py-2 text-sm font-medium underline disabled:opacity-0"
-        >
-          Back
-        </button>
+          {step === 3 && (
+            <fieldset className="flex flex-col gap-3">
+              <legend className="mb-1 text-sm font-medium">What kind of content would you like to see?</legend>
+              <SelectableGrid options={options.content_types} selectedIds={contentTypes} onToggle={toggleContentType} />
+            </fieldset>
+          )}
+          </div>
 
-        {step < TOTAL_STEPS ? (
-          <button
-            type="button"
-            onClick={goNext}
-            className="rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
-          >
-            Next
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
-          >
-            {isSubmitting ? "Saving..." : "Finish"}
-          </button>
-        )}
-      </div>
+          {stepError && (
+            <p role="alert" className="mt-4 text-center text-sm text-danger">
+              {stepError}
+            </p>
+          )}
+          {submitError && (
+            <p role="alert" className="mt-4 text-center text-sm text-danger">
+              {submitError}
+            </p>
+          )}
 
-      <button type="button" onClick={logout} className="text-center text-xs text-zinc-400 underline">
-        Log out
-      </button>
-    </main>
+          <div className="mt-6 flex justify-between gap-3">
+            <Button type="button" variant="ghost" onClick={goBack} disabled={step === 1} className="disabled:opacity-0">
+              <ArrowLeft className="h-4 w-4" /> Back
+            </Button>
+
+            {step < TOTAL_STEPS ? (
+              <Button type="button" onClick={goNext} className="px-7">
+                Next <ArrowRight className="h-4 w-4" />
+              </Button>
+            ) : (
+              <Button type="button" onClick={handleSubmit} disabled={isSubmitting} className="px-7">
+                {isSubmitting ? "Saving..." : "Finish"} <ArrowRight className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+        </div>
+      </main>
+    </div>
   );
 }

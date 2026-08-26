@@ -1,11 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 
 import { ApiError } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
 import { FormField } from "@/components/FormField";
+import { Wordmark } from "@/components/Wordmark";
+import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/lib/theme-context";
 
 export default function SignupPage() {
   const { signup } = useAuth();
@@ -29,39 +33,57 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 p-8">
-      <h1 className="text-2xl font-semibold">Create an account</h1>
-      <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4" noValidate>
-        <FormField label="Name" value={name} onChange={setName} required autoComplete="name" />
-        <FormField label="Email" type="email" value={email} onChange={setEmail} required autoComplete="email" />
-        <FormField
-          label="Password (at least 8 characters)"
-          type="password"
-          value={password}
-          onChange={setPassword}
-          required
-          minLength={8}
-          autoComplete="new-password"
+    <main className="flex min-h-screen">
+      <div className="hidden w-1/2 flex-col items-center justify-center gap-6 bg-accent-soft p-10 lg:flex">
+        <Image
+          src="/illustrations/auth-shield.webp"
+          alt="A calm cartoon bull mascot meditating behind a glowing padlock shield"
+          width={720}
+          height={1073}
+          priority
+          className="w-full max-w-xs"
         />
-        {error && (
-          <p role="alert" className="text-sm text-red-600 dark:text-red-400">
-            {error}
-          </p>
-        )}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="rounded bg-zinc-900 px-4 py-2 text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
-        >
-          {isSubmitting ? "Creating account..." : "Sign up"}
-        </button>
-      </form>
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-        Already have an account?{" "}
-        <Link href="/login" className="font-medium underline">
-          Log in
-        </Link>
-      </p>
+        <p className="max-w-xs text-center text-sm text-muted">
+          Your password is hashed, never stored in plain text, and never shared.
+        </p>
+      </div>
+
+      <div className="relative flex flex-1 flex-col items-center justify-center gap-6 p-8">
+        <div className="absolute right-5 top-5">
+          <ThemeToggle />
+        </div>
+        <Wordmark />
+        <div className="w-full max-w-sm rounded-xl border border-surface-border bg-surface p-6 shadow-card">
+          <h1 className="mb-6 text-xl font-semibold">Create an account</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
+            <FormField label="Name" value={name} onChange={setName} required autoComplete="name" />
+            <FormField label="Email" type="email" value={email} onChange={setEmail} required autoComplete="email" />
+            <FormField
+              label="Password (at least 8 characters)"
+              type="password"
+              value={password}
+              onChange={setPassword}
+              required
+              minLength={8}
+              autoComplete="new-password"
+            />
+            {error && (
+              <p role="alert" className="text-sm text-danger">
+                {error}
+              </p>
+            )}
+            <Button type="submit" disabled={isSubmitting} className="mt-2 w-full">
+              {isSubmitting ? "Creating account..." : "Sign up"}
+            </Button>
+          </form>
+        </div>
+        <p className="text-sm text-muted">
+          Already have an account?{" "}
+          <Link href="/login" className="font-medium text-accent hover:underline">
+            Log in
+          </Link>
+        </p>
+      </div>
     </main>
   );
 }

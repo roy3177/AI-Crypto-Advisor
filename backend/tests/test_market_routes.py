@@ -28,7 +28,7 @@ def signup_and_login(client) -> dict:
 
 
 def empty_prices_response() -> PricesResponse:
-    return PricesResponse(items=[], status="live", generated_at=datetime.now(timezone.utc))
+    return PricesResponse(items=[], status="live", generated_at=datetime.now(timezone.utc), content_key="prices::2026-01-01")
 
 
 def empty_news_response() -> NewsResponse:

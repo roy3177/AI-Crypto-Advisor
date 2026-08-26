@@ -114,8 +114,12 @@ describe("OnboardingPage", () => {
         content_types: ["market_news"],
       }),
     );
-    await waitFor(() => expect(refreshUserMock).toHaveBeenCalled());
-    await waitFor(() => expect(routerMock.push).toHaveBeenCalledWith("/dashboard"));
+    // A brief celebration screen shows before the (cosmetic, timer-based)
+    // redirect -- preferences are already saved by this point. `refreshUser`
+    // and the actual navigation are deliberately deferred until after it.
+    expect(await screen.findByText(/all set/i)).toBeInTheDocument();
+    await waitFor(() => expect(refreshUserMock).toHaveBeenCalled(), { timeout: 3000 });
+    await waitFor(() => expect(routerMock.push).toHaveBeenCalledWith("/dashboard"), { timeout: 3000 });
   });
 
   it("shows an error and keeps selections when saving fails", async () => {
