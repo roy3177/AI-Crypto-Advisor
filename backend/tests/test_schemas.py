@@ -7,33 +7,41 @@ import pytest
 from pydantic import ValidationError
 
 from app.schemas.feedback import FeedbackCreate
-from app.schemas.preference import UserPreferenceCreate
+from app.schemas.preference import PreferenceRequest
 
 
-class TestUserPreferenceSchema:
+class TestPreferenceSchema:
     def test_valid_preferences_are_accepted(self):
-        pref = UserPreferenceCreate(
+        pref = PreferenceRequest(
             interested_assets=["bitcoin", "ethereum"],
             investor_type="hodler",
             content_types=["market_news", "fun"],
         )
         assert pref.investor_type == "hodler"
 
+    def test_duplicate_assets_are_deduplicated(self):
+        pref = PreferenceRequest(
+            interested_assets=["bitcoin", "bitcoin", "ethereum"],
+            investor_type="hodler",
+            content_types=["fun"],
+        )
+        assert pref.interested_assets == ["bitcoin", "ethereum"]
+
     def test_empty_assets_are_rejected(self):
         with pytest.raises(ValidationError):
-            UserPreferenceCreate(interested_assets=[], investor_type="hodler", content_types=["fun"])
+            PreferenceRequest(interested_assets=[], investor_type="hodler", content_types=["fun"])
 
     def test_unsupported_asset_is_rejected(self):
         with pytest.raises(ValidationError):
-            UserPreferenceCreate(interested_assets=["dogecoin", "not_a_coin"], investor_type="hodler", content_types=["fun"])
+            PreferenceRequest(interested_assets=["dogecoin", "not_a_coin"], investor_type="hodler", content_types=["fun"])
 
     def test_unsupported_investor_type_is_rejected(self):
         with pytest.raises(ValidationError):
-            UserPreferenceCreate(interested_assets=["bitcoin"], investor_type="whale", content_types=["fun"])
+            PreferenceRequest(interested_assets=["bitcoin"], investor_type="whale", content_types=["fun"])
 
     def test_unsupported_content_type_is_rejected(self):
         with pytest.raises(ValidationError):
-            UserPreferenceCreate(interested_assets=["bitcoin"], investor_type="hodler", content_types=["memes_galore"])
+            PreferenceRequest(interested_assets=["bitcoin"], investor_type="hodler", content_types=["memes_galore"])
 
 
 class TestFeedbackSchema:

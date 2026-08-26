@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-labelledby="title desc">
+  <title id="title">Diamond hands</title>
+  <desc id="desc">A cartoon diamond with the caption HODL</desc>
+  <rect width="400" height="300" fill="#0f172a"/>
+  <polygon points="200,60 260,120 200,260 140,120" fill="#7dd3fc" stroke="#e0f2fe" stroke-width="4"/>
+  <polygon points="140,120 260,120 200,60" fill="#bae6fd"/>
+  <polygon points="200,60 170,120 230,120" fill="#e0f2fe"/>
+  <text x="200" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#facc15">💎🙌</text>
+  <text x="200" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#f8fafc">HODL</text>
+</svg>

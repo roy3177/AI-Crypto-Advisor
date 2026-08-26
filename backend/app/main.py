@@ -8,7 +8,7 @@ lives in `app/services/*` -- this file should stay small forever.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import health
+from app.api.routes import auth, health, insights, market, memes, preferences
 from app.core.config import get_settings
 
 settings = get_settings()
@@ -29,10 +29,13 @@ app.add_middleware(
 # Health check is intentionally outside the /api prefix (matches the
 # convention documented in CLAUDE.md).
 app.include_router(health.router)
+app.include_router(auth.router, prefix="/api/auth")
+app.include_router(preferences.router, prefix="/api/preferences")
+app.include_router(market.router, prefix="/api/market")
+app.include_router(insights.router, prefix="/api/insights")
+app.include_router(memes.router, prefix="/api/memes")
 
 # Future routers (all under /api, added in later phases):
-# app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
-# app.include_router(preferences.router, prefix="/api/preferences", tags=["preferences"])
 # app.include_router(market.router, prefix="/api/market", tags=["market"])
 # app.include_router(insights.router, prefix="/api/insights", tags=["insights"])
 # app.include_router(feedback.router, prefix="/api/feedback", tags=["feedback"])

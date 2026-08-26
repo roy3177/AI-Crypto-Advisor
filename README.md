@@ -6,9 +6,11 @@ questionnaire, and get a daily dashboard with market news, coin prices, one
 AI-generated insight per day, and a crypto meme - each section can be voted
 thumbs up/down.
 
-> **Status: early scaffold.** Project foundation and the database schema
-> (this phase) are built and verified. Authentication, onboarding, the
-> dashboard, and deployment are not implemented yet - see
+> **Status: early scaffold.** Project foundation, the database schema,
+> authentication, onboarding, the CoinGecko/CryptoPanic integrations, the
+> daily AI insight, and the dashboard (all four mandatory sections, with
+> real personalized ordering) are built and verified. Feedback voting and
+> deployment are not implemented yet - see
 > [Known limitations](#known-limitations).
 
 ## Product
@@ -106,12 +108,34 @@ cd backend
 
 Covers the `/health` endpoint, database constraints (unique emails, one
 preference per user, one daily insight per user/date, valid vote values,
-cascading deletes, ...), and Pydantic validation rules. The database tests
-require a real PostgreSQL instance reachable via `DATABASE_URL` and are
-skipped automatically if none is reachable. More tests are added alongside
-each feature.
+cascading deletes, ...), Pydantic validation rules, authentication
+(signup, login, JWT validation, protected endpoints), onboarding
+(preference validation, atomic save + `onboarding_completed`, upsert,
+per-user isolation), the CoinGecko/CryptoPanic integrations
+(provider-client error handling, cache, fallback, personalization - see
+[Skills/integrate-crypto-data/SKILL.md](Skills/integrate-crypto-data/SKILL.md)),
+the daily AI insight (grounding in real price/news data, prompt-injection
+containment, safety-phrase rejection, daily reuse, non-persisted fallback -
+see [Skills/generate-ai-insights/SKILL.md](Skills/generate-ai-insights/SKILL.md)),
+and the meme endpoint (public, valid catalog shape - see
+[Skills/build-crypto-dashboard/SKILL.md](Skills/build-crypto-dashboard/SKILL.md)).
+The database/auth/preferences/market-route/insight-route tests require a
+real PostgreSQL instance reachable via `DATABASE_URL` and are skipped
+automatically if none is reachable; the provider-client and service-layer
+tests never touch a live network (mocked at the `httpx` transport level or
+via fake provider clients). More tests are added alongside each feature.
 
-Frontend: not yet configured (Vitest + React Testing Library planned).
+Frontend:
+
+```bash
+cd frontend
+npm test
+```
+
+Covers the login/signup forms, the `ProtectedRoute` redirect logic, the
+onboarding questionnaire, and the dashboard's four sections (loading,
+partial failure, fallback labeling, and the personalization-driven
+section ordering).
 
 ## Production build
 
@@ -135,11 +159,65 @@ documented here once the database and dashboard are built.
 
 ## Known limitations
 
-This is an early-stage scaffold. The database schema exists, but nothing
-reads or writes through it yet via the API: authentication, onboarding,
-preferences, market-data integrations, AI insight generation, the
-dashboard UI, feedback voting, frontend automated tests, and deployment
-are not implemented yet.
+This is an early-stage scaffold. Signup, login, JWT-protected endpoints,
+the onboarding questionnaire, and the full four-section dashboard (coin
+prices, market news, daily AI insight, crypto meme) all work end-to-end.
+Not yet implemented: feedback voting (thumbs up/down) and deployment.
+There is no password-reset or email-verification flow, and no dedicated
+"edit preferences later" settings page yet (the onboarding form itself
+would need to be reused for that - out of scope until requested).
+
+**Meme images** are 4 small original SVG graphics created for this
+project (`frontend/public/memes/`), not scraped or hotlinked, to avoid
+copyright and reliability issues with external meme sources.
+
+**Dashboard personalization**: section order responds to the user's saved
+`content_types` (`charts` -> Coin Prices earlier, `market_news` -> Market
+News earlier, `fun` -> the meme earlier; `social` has no dedicated section
+in this MVP and does not affect ordering) - verified with both unit tests
+on the ordering function and a rendered-DOM test confirming heading order
+actually changes.
+
+**AI insight generation was partially verified against a live OpenRouter
+account.** With a real `OPENROUTER_API_KEY` configured:
+
+- The default model (`openai/gpt-oss-20b:free`) turned out to have moved
+  to OpenRouter's paid tier within days of being confirmed free -- caught
+  live via a real `404` response, not assumed. The default was updated to
+  `google/gemma-4-31b-it:free` after checking OpenRouter's public
+  `GET /api/v1/models` list directly. This is exactly the rotation risk
+  documented above, observed in practice.
+- The corrected model then hit a real `429 Rate limit exceeded` from
+  OpenRouter (documented policy: new accounts without $10+ in lifetime
+  credit purchases get a low daily quota for free models). The app
+  correctly returned a controlled, labeled, non-persisted fallback instead
+  of crashing -- so the *entire error path* (network call, timeout/4xx/5xx
+  handling, safe fallback, no bad data stored) is confirmed live.
+- What remains **not verified live**: an actual successful generation
+  (prompt -> real model output -> stored insight). That path is covered by
+  mocked tests only. Retry later, or after adding credits to the
+  OpenRouter account, to confirm it end-to-end.
+
+**CryptoPanic news:** requires a free API key you get by signing up at
+https://cryptopanic.com/developers/api/ - without one (the default), the
+app runs correctly using labeled static fallback news instead of an
+error. CryptoPanic's docs site blocks automated fetching, so
+`CRYPTOPANIC_API_BASE`'s exact plan segment (`free` vs `developer`) was
+not independently verified against a live account - check your own
+CryptoPanic dashboard and update `.env` if it differs from the default.
+
+**In-memory cache:** prices (60s) and news (5min) are cached in the
+backend process's memory only - cleared on restart, not shared across
+multiple backend instances. Fine for this MVP's single-instance
+deployment; a multi-instance production deployment would need a shared
+cache (e.g. Redis).
+
+**Auth token storage:** the JWT is kept in the browser's `localStorage`,
+attached to API requests via the centralized API client. This is simple
+and standard for an MVP, but it means a successful XSS attack on the
+frontend could read the token - a production app handling higher-value
+data might instead use an `HttpOnly` cookie (which trades that risk for
+needing CSRF protection).
 
 ## Financial disclaimer
 

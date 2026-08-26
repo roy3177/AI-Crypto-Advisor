@@ -1,20 +1,27 @@
 """
-Pydantic schema for the AI insight returned to the client.
+Response schema for the daily AI insight.
 
-Only the fields the frontend actually needs are exposed. `context_snapshot`,
-`model_provider`, and `model_name` stay internal (useful for debugging /
-review) and are not part of the public response.
+`id` and `model_provider` are `None` for a non-persisted fallback (the
+skill's rule: a temporary fallback must never be written to
+`daily_insights` as if it were the user's real saved insight for the day).
 """
 import uuid
 from datetime import date, datetime
+from typing import Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
+
+DISCLAIMER = "This content is for informational purposes only and is not financial advice."
+
+FIXED_TITLE = "Your daily crypto insight"
 
 
 class DailyInsightResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: uuid.UUID
-    insight_date: date
+    id: uuid.UUID | None
+    date: date
+    title: str
     content: str
-    created_at: datetime
+    disclaimer: str = DISCLAIMER
+    source: Literal["ai", "fallback"]
+    model_provider: str | None = None
+    generated_at: datetime

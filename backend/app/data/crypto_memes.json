@@ -1,0 +1,26 @@
+[
+  {
+    "id": "diamond-hands-01",
+    "title": "Diamond hands",
+    "image_url": "/memes/diamond-hands-01.svg",
+    "alt_text": "Cartoon diamond with the caption HODL, representing holding through market volatility"
+  },
+  {
+    "id": "to-the-moon-01",
+    "title": "To the moon",
+    "image_url": "/memes/to-the-moon-01.svg",
+    "alt_text": "Cartoon rocket flying toward the moon with the caption To The Moon"
+  },
+  {
+    "id": "buy-the-dip-01",
+    "title": "Buy the dip",
+    "image_url": "/memes/buy-the-dip-01.svg",
+    "alt_text": "A simple line chart dipping down then recovering, with the caption Buy The Dip"
+  },
+  {
+    "id": "number-go-up-01",
+    "title": "Number go up",
+    "image_url": "/memes/number-go-up-01.svg",
+    "alt_text": "A simple line chart trending upward with the caption Number Go Up"
+  }
+]

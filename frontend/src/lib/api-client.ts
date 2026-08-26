@@ -10,6 +10,8 @@
  * hardcoded, per the project's frontend rules.
  */
 
+import { getToken } from "./token-storage";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 export class ApiError extends Error {
@@ -23,20 +25,20 @@ export class ApiError extends Error {
 }
 
 /**
- * Thin wrapper around `fetch` that targets the backend API, sends JSON, and
- * throws a typed `ApiError` on non-2xx responses instead of leaving callers
- * to check `response.ok` everywhere.
- *
- * Attaching the JWT for authenticated requests is added in the
- * /build-authentication phase, once the token storage strategy is decided.
+ * Thin wrapper around `fetch` that targets the backend API, sends JSON,
+ * attaches the stored access token when one exists, and throws a typed
+ * `ApiError` on non-2xx responses instead of leaving callers to check
+ * `response.ok` everywhere.
  */
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const { headers, ...rest } = options;
+  const token = getToken();
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...rest,
     headers: {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
   });

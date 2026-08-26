@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-labelledby="title desc">
+  <title id="title">Number go up</title>
+  <desc id="desc">A simple line chart trending upward</desc>
+  <rect width="400" height="300" fill="#0f172a"/>
+  <polyline points="30,240 100,200 160,210 220,140 280,120 360,50" fill="none" stroke="#4ade80" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="360,50 345,65 372,68" fill="#4ade80"/>
+  <text x="200" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#f8fafc">📈 NUMBER GO UP</text>
+</svg>
