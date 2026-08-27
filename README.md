@@ -1,26 +1,79 @@
-# Moveo AI Crypto Advisor
+# Crypto Advisor
 
-A personalized crypto-investor dashboard, built for the Moveo coding
-assignment. Users create an account, complete a short onboarding
-questionnaire, and get a daily dashboard with market news, coin prices, one
-AI-generated insight per day, and a crypto meme - each section can be voted
-thumbs up/down.
+A personalized crypto-investor dashboard built for the Moveo coding assignment. Users create an account, complete a short onboarding questionnaire, and get a daily dashboard with market news, coin prices, one AI-generated insight per day, and a crypto meme — every section supports thumbs-up / thumbs-down feedback.
 
-> **Status: early scaffold.** Project foundation, the database schema,
-> authentication, onboarding, the CoinGecko/CryptoPanic integrations, the
-> daily AI insight, the dashboard (all four mandatory sections, with real
-> personalized ordering), and thumbs-up/thumbs-down feedback on every
-> section are built and verified. Deployment is not done yet - see
-> [Known limitations](#known-limitations).
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
+![React](https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss&logoColor=white)
+
+> **Status:** authentication, onboarding, the four dashboard sections, and feedback all work end-to-end and are covered by automated tests. **Deployment is the one piece not done yet** — see [Deployment](#deployment).
+
+---
+
+## Author
+
+<div align="center">
+
+**Roy Meoded**
+
+Software Developer
+
+[![GitHub](https://img.shields.io/badge/GitHub-roy3177-181717?logo=github&logoColor=white)](https://github.com/roy3177)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Roy%20Meoded-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/roy-meoded/)
+[![Email](https://img.shields.io/badge/Email-contact-D14836?logo=gmail&logoColor=white)](mailto:roymeoded2512@gmail.com)
+
+</div>
+
+---
+
+## Screenshots
+
+| Landing page | Onboarding |
+|---|---|
+| ![Landing page](docs/screenshots/home.webp) | ![Onboarding](docs/screenshots/onboarding.webp) |
+
+| Login | Dashboard |
+|---|---|
+| ![Login](docs/screenshots/login.webp) | ![Dashboard](docs/screenshots/dashboard.webp) |
+
+## Table of contents
+
+- [Product](#product)
+- [Features](#features)
+- [Architecture](#architecture)
+- [Tech stack](#tech-stack)
+- [Repository layout](#repository-layout)
+- [Getting started](#getting-started)
+- [Environment variables](#environment-variables)
+- [Database & migrations](#database--migrations)
+- [API reference](#api-reference)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Reviewer access to stored data](#reviewer-access-to-stored-data)
+- [Known limitations & design decisions](#known-limitations--design-decisions)
+- [Financial disclaimer](#financial-disclaimer)
 
 ## Product
 
-See [CLAUDE.md](CLAUDE.md) for the full product and engineering rules this
-project follows.
+See [CLAUDE.md](CLAUDE.md) for the full product and engineering rules this project follows, and [Skills/](Skills/) for the detailed design notes behind each feature area.
+
+## Features
+
+- **Accounts** — email/name/password signup, JWT-based login, protected endpoints.
+- **Onboarding** — a 3-step questionnaire (crypto assets, investor type, content preferences), saved atomically.
+- **Personalized daily dashboard** — four mandatory sections, always present, reordered based on saved preferences:
+  - **Market News** — CryptoPanic, with a labeled static fallback when no API key is configured.
+  - **Coin Prices** — CoinGecko, scoped to the user's selected assets.
+  - **AI Insight of the Day** — one insight per user per day, grounded in real price/news data, generated via OpenRouter with a safe, clearly-labeled fallback.
+  - **Fun Crypto Meme** — a randomly served meme from a curated, original set of illustrations.
+- **Feedback** — thumbs-up / thumbs-down on every section (and per-article for news), stored per user for future personalization.
 
 ## Architecture
 
-```
+```text
 Next.js (TypeScript, Tailwind) --HTTPS/REST--> FastAPI --> PostgreSQL
                                                    |
                                                    |-- CoinGecko client (prices)
@@ -28,22 +81,30 @@ Next.js (TypeScript, Tailwind) --HTTPS/REST--> FastAPI --> PostgreSQL
                                                    `-- OpenRouter client (AI insight)
 ```
 
-## Stack
+Backend responsibilities are layered: routes stay thin, business logic lives in a service layer, and each external provider has its own client — see [backend/README.md](backend/README.md) for the full breakdown.
 
-- **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4
-- **Backend:** FastAPI, SQLAlchemy, Alembic, Pydantic, httpx
-- **Database:** PostgreSQL
-- **Auth:** JWT access tokens, bcrypt password hashing
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4 |
+| Backend | FastAPI, SQLAlchemy 2, Alembic, Pydantic v2, httpx |
+| Database | PostgreSQL |
+| Auth | JWT access tokens, bcrypt password hashing |
+| Testing | Pytest (backend), Vitest + React Testing Library (frontend) |
 
 ## Repository layout
 
-```
-frontend/   Next.js app
-backend/    FastAPI app
+```text
+frontend/   Next.js app          -- see frontend/README.md
+backend/    FastAPI app          -- see backend/README.md
 Skills/     Project-specific Claude Code skills used during development
+CLAUDE.md   Full product and engineering rules for this project
 ```
 
-## Local setup
+## Getting started
+
+Requires Node.js, Python 3.11+, and a local PostgreSQL instance.
 
 ### Backend
 
@@ -54,15 +115,9 @@ python -m venv venv
 # source venv/bin/activate     # macOS/Linux
 pip install -r requirements.txt
 cp .env.example .env
-uvicorn app.main:app --reload
-```
-
-Requires a local PostgreSQL instance matching `DATABASE_URL` in `.env`.
-Create the database and apply migrations:
-
-```bash
 createdb crypto_advisor        # or create it via your Postgres client of choice
 alembic upgrade head
+uvicorn app.main:app --reload
 ```
 
 ### Frontend
@@ -74,29 +129,55 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open http://localhost:3000.
+Open http://localhost:3000. Full details for each side live in [backend/README.md](backend/README.md) and [frontend/README.md](frontend/README.md).
 
 ## Environment variables
 
-See `backend/.env.example` and `frontend/.env.example` for the full list
-with descriptions. Never commit real `.env` / `.env.local` files.
+Full lists with descriptions are in `backend/.env.example` and `frontend/.env.example`. Never commit real `.env` / `.env.local` files.
 
-## Database migrations
+| Variable | Where | Required? |
+|---|---|---|
+| `DATABASE_URL` | backend | Yes |
+| `JWT_SECRET` | backend | Yes |
+| `CORS_ORIGINS` | backend | Yes |
+| `COINGECKO_API_KEY` | backend | No — keyless demo tier works |
+| `CRYPTOPANIC_API_KEY` | backend | No — falls back to static news |
+| `OPENROUTER_API_KEY` | backend | No — falls back to a safe static insight |
+| `NEXT_PUBLIC_API_URL` | frontend | Yes |
 
-Managed with Alembic. The schema defines four tables: `users`,
-`user_preferences`, `daily_insights`, `content_feedback` - see
-[Skills/design-database-schema/SKILL.md](Skills/design-database-schema/SKILL.md)
-for the full design rules.
+## Database & migrations
+
+Managed with Alembic. The schema defines four tables — `users`, `user_preferences`, `daily_insights`, `content_feedback` — see [Skills/design-database-schema/SKILL.md](Skills/design-database-schema/SKILL.md) for the full design rules and constraints.
 
 ```bash
 cd backend
-alembic upgrade head              # apply all migrations
-alembic revision --autogenerate -m "describe change"   # after changing a model
+alembic upgrade head                                   # apply all migrations
+alembic revision --autogenerate -m "describe change"    # after changing a model
 ```
 
 Always review an autogenerated migration before applying it.
 
-## Tests
+## API reference
+
+All routes are prefixed with `/api` except `/health`. Full request/response schemas are in `backend/app/schemas/`.
+
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | `/health` | — | Liveness check |
+| POST | `/api/auth/signup` | — | Create an account |
+| POST | `/api/auth/login` | — | Log in, receive a JWT |
+| GET | `/api/auth/me` | ✓ | Current user |
+| GET | `/api/preferences/options` | — | Available assets / investor types / content types |
+| GET | `/api/preferences/me` | ✓ | Current user's saved preferences |
+| PUT | `/api/preferences/me` | ✓ | Save preferences, completes onboarding |
+| GET | `/api/market/prices` | ✓ | Prices for the user's selected assets |
+| GET | `/api/market/news` | ✓ | Personalized market news |
+| GET | `/api/insights/daily` | ✓ | Today's AI insight (generated once, then reused) |
+| GET | `/api/memes/random` | — | A random crypto meme |
+| PUT | `/api/feedback` | ✓ | Upsert a thumbs-up/down vote |
+| GET | `/api/feedback/me` | ✓ | Current user's saved votes |
+
+## Testing
 
 Backend:
 
@@ -106,27 +187,7 @@ cd backend
 # pytest                # macOS/Linux
 ```
 
-Covers the `/health` endpoint, database constraints (unique emails, one
-preference per user, one daily insight per user/date, valid vote values,
-cascading deletes, ...), Pydantic validation rules, authentication
-(signup, login, JWT validation, protected endpoints), onboarding
-(preference validation, atomic save + `onboarding_completed`, upsert,
-per-user isolation), the CoinGecko/CryptoPanic integrations
-(provider-client error handling, cache, fallback, personalization - see
-[Skills/integrate-crypto-data/SKILL.md](Skills/integrate-crypto-data/SKILL.md)),
-the daily AI insight (grounding in real price/news data, prompt-injection
-containment, safety-phrase rejection, daily reuse, non-persisted fallback -
-see [Skills/generate-ai-insights/SKILL.md](Skills/generate-ai-insights/SKILL.md)),
-the meme endpoint (public, valid catalog shape - see
-[Skills/build-crypto-dashboard/SKILL.md](Skills/build-crypto-dashboard/SKILL.md)),
-and feedback (upsert, ownership, content-key validation, cross-user
-isolation - see
-[Skills/manage-content-feedback/SKILLS.md](Skills/manage-content-feedback/SKILLS.md)).
-The database/auth/preferences/market-route/insight-route tests require a
-real PostgreSQL instance reachable via `DATABASE_URL` and are skipped
-automatically if none is reachable; the provider-client and service-layer
-tests never touch a live network (mocked at the `httpx` transport level or
-via fake provider clients). More tests are added alongside each feature.
+Covers database constraints, authentication, onboarding, the CoinGecko/CryptoPanic integrations (provider error handling, cache, fallback), the daily AI insight (grounding, prompt-injection containment, daily reuse), the meme endpoint, and feedback (upsert, ownership, cross-user isolation). Tests that need a real database are skipped automatically if `DATABASE_URL` isn't reachable; provider-client tests never touch a live network.
 
 Frontend:
 
@@ -135,114 +196,37 @@ cd frontend
 npm test
 ```
 
-Covers the login/signup forms, the `ProtectedRoute` redirect logic, the
-onboarding questionnaire, the dashboard's four sections (loading, partial
-failure, fallback labeling, personalization-driven ordering), and the
-reusable feedback buttons (selected state, optimistic update, rollback on
-failure).
+Covers the auth forms, `ProtectedRoute`, the onboarding questionnaire, the dashboard's four sections (loading, partial failure, fallback labeling, personalization-driven ordering), and the reusable feedback buttons.
 
-## Production build
+Production build:
 
 ```bash
 cd frontend
 npm run build
 ```
 
-Verified passing as of the current scaffold.
-
 ## Deployment
 
-Not yet deployed. Planned: Vercel (frontend), Render or Railway (backend +
-managed PostgreSQL). Public URLs will be added here once live.
+Not yet deployed. Planned: Vercel (frontend), Render or Railway (backend + managed PostgreSQL) — see [Skills/deploy-crypto-advisor/SKILL.md](Skills/deploy-crypto-advisor/SKILL.md). Public URLs will be added here once live.
 
 ## Reviewer access to stored data
 
-Not yet applicable - no database schema exists yet. A safe, read-only
-reviewer access method (without exposing production credentials) will be
-documented here once the database and dashboard are built.
+For a reviewer to inspect stored data without production credentials:
 
-## Known limitations
+- **Local:** follow [Getting started](#getting-started), then inspect the database directly with `psql` or any Postgres client (`SELECT * FROM users;`, `SELECT * FROM content_feedback;`, etc.) — no data is hidden or write-protected for the local database owner.
+- **Once deployed:** a read-only database user (or a hosted DB dashboard from the provider, e.g. Render's built-in Postgres viewer) will be created and its credentials shared with reviewers directly, never committed to the repository.
 
-This is an early-stage scaffold. Signup, login, JWT-protected endpoints,
-the onboarding questionnaire, the full four-section dashboard (coin
-prices, market news, daily AI insight, crypto meme), and thumbs-up/down
-feedback on every section all work end-to-end. Deployment is the only
-remaining piece. There is no password-reset or email-verification flow,
-and no dedicated "edit preferences later" settings page yet (the
-onboarding form itself would need to be reused for that - out of scope
-until requested).
+## Known limitations & design decisions
 
-**Feedback content keys** (documented decision): market news is voted
-per-article; coin prices, the AI insight, and the meme are voted as a
-whole section/item, not per sub-element. A fallback AI insight (no
-`OPENROUTER_API_KEY`, or a provider failure) has no feedback controls,
-since it was never saved and there is nothing to attach a vote to.
-
-**Meme images** are 6 original illustrations generated with Google
-Gemini specifically for this project (`frontend/public/memes/`, resized
-and compressed to WebP, ~25-40 KB each) - not scraped, hotlinked, or
-using any real coin/brand logos, to avoid copyright and reliability
-issues with external meme sources. The uncompressed source exports live
-in `frontend/images/` (git-ignored, not part of the deployed app).
-
-**Site-wide illustrations**: a consistent cartoon bull mascot (also
-Gemini-generated, same pipeline as the memes) appears across the app for
-branding and empty/edge states, not just the meme section -
-`frontend/public/illustrations/`: the landing-page hero, the shared
-login/signup split panel, the onboarding banner, an empty-state graphic
-reused by both the "no assets selected" and "no news available" states,
-the onboarding "All set!" celebration screen shown briefly before the
-dashboard redirect, and the custom 404 page.
-
-**Dashboard personalization**: section order responds to the user's saved
-`content_types` (`charts` -> Coin Prices earlier, `market_news` -> Market
-News earlier, `fun` -> the meme earlier; `social` has no dedicated section
-in this MVP and does not affect ordering) - verified with both unit tests
-on the ordering function and a rendered-DOM test confirming heading order
-actually changes.
-
-**AI insight generation was partially verified against a live OpenRouter
-account.** With a real `OPENROUTER_API_KEY` configured:
-
-- The default model (`openai/gpt-oss-20b:free`) turned out to have moved
-  to OpenRouter's paid tier within days of being confirmed free -- caught
-  live via a real `404` response, not assumed. The default was updated to
-  `google/gemma-4-31b-it:free` after checking OpenRouter's public
-  `GET /api/v1/models` list directly. This is exactly the rotation risk
-  documented above, observed in practice.
-- The corrected model then hit a real `429 Rate limit exceeded` from
-  OpenRouter (documented policy: new accounts without $10+ in lifetime
-  credit purchases get a low daily quota for free models). The app
-  correctly returned a controlled, labeled, non-persisted fallback instead
-  of crashing -- so the *entire error path* (network call, timeout/4xx/5xx
-  handling, safe fallback, no bad data stored) is confirmed live.
-- What remains **not verified live**: an actual successful generation
-  (prompt -> real model output -> stored insight). That path is covered by
-  mocked tests only. Retry later, or after adding credits to the
-  OpenRouter account, to confirm it end-to-end.
-
-**CryptoPanic news:** requires a free API key you get by signing up at
-https://cryptopanic.com/developers/api/ - without one (the default), the
-app runs correctly using labeled static fallback news instead of an
-error. CryptoPanic's docs site blocks automated fetching, so
-`CRYPTOPANIC_API_BASE`'s exact plan segment (`free` vs `developer`) was
-not independently verified against a live account - check your own
-CryptoPanic dashboard and update `.env` if it differs from the default.
-
-**In-memory cache:** prices (60s) and news (5min) are cached in the
-backend process's memory only - cleared on restart, not shared across
-multiple backend instances. Fine for this MVP's single-instance
-deployment; a multi-instance production deployment would need a shared
-cache (e.g. Redis).
-
-**Auth token storage:** the JWT is kept in the browser's `localStorage`,
-attached to API requests via the centralized API client. This is simple
-and standard for an MVP, but it means a successful XSS attack on the
-frontend could read the token - a production app handling higher-value
-data might instead use an `HttpOnly` cookie (which trades that risk for
-needing CSRF protection).
+- No password-reset or email-verification flow, and no dedicated "edit preferences later" settings page (the onboarding form itself would need to be reused for that — out of scope until requested).
+- **Feedback content keys:** market news is voted per-article; coin prices, the AI insight, and the meme are voted as a whole section, not per sub-element. A fallback AI insight has no feedback controls, since it was never saved.
+- **Meme images and site-wide illustrations** are original Google Gemini generations made for this project (`frontend/public/memes/`, `frontend/public/illustrations/`) — not scraped, hotlinked, or using any real coin/brand logos. Source exports live in `frontend/images/` (git-ignored).
+- **Dashboard personalization:** section order responds to the user's saved `content_types` (`charts` → Coin Prices earlier, `market_news` → Market News earlier, `fun` → the meme earlier), verified with both unit and rendered-DOM tests.
+- **AI insight generation** was verified live against a real OpenRouter account for the full error path (a model that moved to the paid tier caught via a live `404`, then a live `429` rate limit correctly triggering the safe fallback). A fully successful live generation (prompt → real model output → stored insight) is covered by mocked tests only — worth retrying after adding OpenRouter credits.
+- **CryptoPanic news** requires a free API key from https://cryptopanic.com/developers/api/; without one, the app runs correctly on labeled static fallback news.
+- **In-memory cache:** prices (60s) and news (5min) are cached in the backend process's memory only — fine for a single-instance deployment, would need a shared cache (e.g. Redis) for a multi-instance one.
+- **Auth token storage:** the JWT lives in `localStorage`, attached via the centralized API client — simple and standard for an MVP, though it means an XSS vulnerability could read the token (an `HttpOnly` cookie would trade that risk for needing CSRF protection).
 
 ## Financial disclaimer
 
-This application is for informational purposes only and does not provide
-financial advice.
+This application is for informational purposes only and does not provide financial advice.
