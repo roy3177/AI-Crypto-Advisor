@@ -107,6 +107,8 @@ All routes are prefixed with `/api` except `/health`. Full schemas live in `app/
 - The authenticated user is always loaded from the token — a frontend-supplied `user_id` is never trusted as identity.
 - Generic error messages on failed login (never reveals whether the email exists).
 - External requests (CoinGecko, CryptoPanic, OpenRouter) run through the backend only, with finite timeouts and controlled retries — a failing optional provider degrades to a labeled fallback instead of breaking the dashboard.
+- Refuses to start in production (`ENVIRONMENT=production`) if `JWT_SECRET` is still the insecure default — fails loudly rather than booting with a forgeable secret.
+- `/api/auth/login` and `/api/auth/signup` are rate-limited per client IP (10 attempts / 5 min, 5 signups / hour) to blunt brute-force and account-spam attempts — see `app/core/rate_limit.py`.
 
 ## Testing
 
@@ -123,4 +125,4 @@ See also: [Skills/integrate-crypto-data](../Skills/integrate-crypto-data/SKILL.m
 
 ---
 
-See the [repository root README](../README.md) for the full project overview, architecture, and deployment plan.
+See the [repository root README](../README.md) for the full project overview, architecture, and deployment (live at https://ai-crypto-advisor-9lnf.onrender.com).

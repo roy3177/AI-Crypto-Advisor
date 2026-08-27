@@ -14,7 +14,7 @@ Next.js app for [Crypto Advisor](../README.md): landing page, authentication, on
 |---|---|
 | `/` | Landing page |
 | `/login`, `/signup` | Authentication, split-panel layout with a dark brand side panel |
-| `/onboarding` | 3-step questionnaire (assets, investor type, content preferences) |
+| `/onboarding` | 3-step questionnaire (assets, investor type, content preferences) — also doubles as the "edit preferences" screen for an already-onboarded user, reached via the dashboard header |
 | `/dashboard` | The four personalized sections, protected by `ProtectedRoute` |
 | `/not-found` | Custom 404 |
 
@@ -78,4 +78,4 @@ npm run build
 
 ---
 
-See the [repository root README](../README.md) for the full project overview, architecture, and deployment plan.
+See the [repository root README](../README.md) for the full project overview, architecture, and deployment (live at https://ai-crypto-advisor-i8oe.vercel.app).

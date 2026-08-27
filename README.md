@@ -9,7 +9,7 @@ A personalized crypto-investor dashboard built for the Moveo coding assignment. 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss&logoColor=white)
 
-> **Status:** authentication, onboarding, the four dashboard sections, and feedback all work end-to-end and are covered by automated tests. **Deployment is the one piece not done yet** — see [Deployment](#deployment).
+> **Status:** deployed and live. Authentication, onboarding (with a dedicated edit-preferences flow), the four dashboard sections, and feedback all work end-to-end against the public URLs, covered by automated tests — see [Deployment](#deployment).
 
 ---
 
@@ -63,7 +63,7 @@ See [CLAUDE.md](CLAUDE.md) for the full product and engineering rules this proje
 ## Features
 
 - **Accounts** — email/name/password signup, JWT-based login, protected endpoints.
-- **Onboarding** — a 3-step questionnaire (crypto assets, investor type, content preferences), saved atomically.
+- **Onboarding** — a 3-step questionnaire (crypto assets, investor type, content preferences), saved atomically. The same form doubles as an "Edit preferences" screen afterward, reachable from the dashboard header.
 - **Personalized daily dashboard** — four mandatory sections, always present, reordered based on saved preferences:
   - **Market News** — CryptoPanic, with a labeled static fallback when no API key is configured.
   - **Coin Prices** — CoinGecko, scoped to the user's selected assets.
@@ -207,21 +207,27 @@ npm run build
 
 ## Deployment
 
-Not yet deployed. Planned: Vercel (frontend), Render or Railway (backend + managed PostgreSQL) — see [Skills/deploy-crypto-advisor/SKILL.md](Skills/deploy-crypto-advisor/SKILL.md). Public URLs will be added here once live.
+Live: frontend on Vercel, backend + managed PostgreSQL on Render — see [Skills/deploy-crypto-advisor/SKILL.md](Skills/deploy-crypto-advisor/SKILL.md) for the full process.
+
+- **App:** https://ai-crypto-advisor-i8oe.vercel.app
+- **API:** https://ai-crypto-advisor-9lnf.onrender.com (`/health` for a liveness check)
+
+**Known free-tier limitation:** the backend is on Render's free plan, which spins down after inactivity — the first request after a while can take up to ~50 seconds while it wakes up. Subsequent requests are fast.
 
 ## Reviewer access to stored data
 
 For a reviewer to inspect stored data without production credentials:
 
 - **Local:** follow [Getting started](#getting-started), then inspect the database directly with `psql` or any Postgres client (`SELECT * FROM users;`, `SELECT * FROM content_feedback;`, etc.) — no data is hidden or write-protected for the local database owner.
-- **Once deployed:** a read-only database user (or a hosted DB dashboard from the provider, e.g. Render's built-in Postgres viewer) will be created and its credentials shared with reviewers directly, never committed to the repository.
+- **Production:** on request, a temporary read-only database user (or a screen-share of Render's built-in Postgres dashboard) will be shared with reviewers directly — never committed to the repository, and never the primary application credentials.
 
 ## Known limitations & design decisions
 
-- No password-reset or email-verification flow, and no dedicated "edit preferences later" settings page (the onboarding form itself would need to be reused for that — out of scope until requested).
+- No password-reset or email-verification flow. Editing saved preferences later is supported — the onboarding form doubles as an edit screen, reachable via "Edit preferences" in the dashboard header once onboarding is complete.
 - **Feedback content keys:** market news is voted per-article; coin prices, the AI insight, and the meme are voted as a whole section, not per sub-element. A fallback AI insight has no feedback controls, since it was never saved.
 - **Meme images and site-wide illustrations** are original Google Gemini generations made for this project (`frontend/public/memes/`, `frontend/public/illustrations/`) — not scraped, hotlinked, or using any real coin/brand logos. Source exports live in `frontend/images/` (git-ignored).
-- **Dashboard personalization:** section order responds to the user's saved `content_types` (`charts` → Coin Prices earlier, `market_news` → Market News earlier, `fun` → the meme earlier), verified with both unit and rendered-DOM tests.
+- **Dashboard personalization:** section order responds to the user's saved `content_types` (`charts` → Coin Prices earlier, `market_news` → Market News earlier). The meme is deliberately never moved to the front regardless of preference — it stays a lighthearted closing note at the end — verified with both unit and rendered-DOM tests.
+- **Security hardening:** the backend refuses to start in production with the default JWT secret (fails loudly instead of booting insecurely), and login/signup are rate-limited per IP (10 attempts / 5 min, 5 signups / hour) to blunt brute-force and account-spam attempts.
 - **AI insight generation** was verified live against a real OpenRouter account for the full error path (a model that moved to the paid tier caught via a live `404`, then a live `429` rate limit correctly triggering the safe fallback). A fully successful live generation (prompt → real model output → stored insight) is covered by mocked tests only — worth retrying after adding OpenRouter credits.
 - **CryptoPanic news** requires a free API key from https://cryptopanic.com/developers/api/; without one, the app runs correctly on labeled static fallback news.
 - **In-memory cache:** prices (60s) and news (5min) are cached in the backend process's memory only — fine for a single-instance deployment, would need a shared cache (e.g. Redis) for a multi-instance one.
