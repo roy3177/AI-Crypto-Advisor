@@ -55,13 +55,11 @@ function OnboardingContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
 
-  // Already-onboarded users shouldn't see this form -- send them straight
-  // to the dashboard instead.
-  useEffect(() => {
-    if (user?.onboarding_completed) {
-      router.replace("/dashboard");
-    }
-  }, [user, router]);
+  // A user who already completed onboarding is allowed to come back here
+  // deliberately (via AppHeader's "Edit preferences" link) to change their
+  // answers -- this page doubles as the edit screen, so it no longer
+  // redirects them away.
+  const isEditing = Boolean(user?.onboarding_completed);
 
   useEffect(() => {
     let cancelled = false;
@@ -181,7 +179,7 @@ function OnboardingContent() {
           priority
           wrapperClassName="w-full max-w-[220px]"
         />
-        <h1 className="text-xl font-semibold tracking-tight">All set!</h1>
+        <h1 className="text-xl font-semibold tracking-tight">{isEditing ? "Saved!" : "All set!"}</h1>
         <p className="text-sm text-muted">Taking you to your dashboard...</p>
       </main>
     );
@@ -195,9 +193,13 @@ function OnboardingContent() {
 
         <main className="flex flex-1 flex-col justify-center gap-6">
           <div className="text-center">
-            <h1 className="text-5xl font-extrabold tracking-tight">Personalize your crypto dashboard</h1>
+            <h1 className="text-5xl font-extrabold tracking-tight">
+              {isEditing ? "Update your preferences" : "Personalize your crypto dashboard"}
+            </h1>
             <p className="mt-3 text-xl text-muted">
-              Tell us what interests you so we can tailor your daily crypto content.
+              {isEditing
+                ? "Change your assets, investor type, or content preferences any time."
+                : "Tell us what interests you so we can tailor your daily crypto content."}
             </p>
           </div>
 
@@ -288,7 +290,7 @@ function OnboardingContent() {
                 </Button>
               ) : (
                 <Button type="button" onClick={handleSubmit} disabled={isSubmitting} className="!px-10 !py-4 !text-lg">
-                  {isSubmitting ? "Saving..." : "Finish"} <ArrowRight className="h-5 w-5" />
+                  {isSubmitting ? "Saving..." : isEditing ? "Save changes" : "Finish"} <ArrowRight className="h-5 w-5" />
                 </Button>
               )}
             </div>

@@ -122,6 +122,29 @@ describe("OnboardingPage", () => {
     await waitFor(() => expect(routerMock.push).toHaveBeenCalledWith("/dashboard"), { timeout: 3000 });
   });
 
+  it("acts as an edit screen for an already-onboarded user instead of redirecting away", async () => {
+    useAuthMock.mockReturnValue({
+      user: { ...authedUser, onboarding_completed: true },
+      isLoading: false,
+      logout: vi.fn(),
+      refreshUser: refreshUserMock,
+    });
+    preferencesApiMock.fetchMyPreferences.mockReset().mockResolvedValue({
+      interested_assets: ["bitcoin"],
+      investor_type: "hodler",
+      content_types: ["market_news"],
+      onboarding_completed: true,
+      updated_at: "2026-01-01T00:00:00Z",
+    });
+
+    render(<OnboardingPage />);
+
+    expect(await screen.findByText(/update your preferences/i)).toBeInTheDocument();
+    expect(routerMock.replace).not.toHaveBeenCalled();
+    // Existing answers are preloaded, and Bitcoin should show as selected.
+    expect(await screen.findByRole("button", { name: /bitcoin/i })).toHaveAttribute("aria-pressed", "true");
+  });
+
   it("shows an error and keeps selections when saving fails", async () => {
     preferencesApiMock.saveMyPreferences.mockRejectedValue(new ApiError("Could not save preferences", 500));
 

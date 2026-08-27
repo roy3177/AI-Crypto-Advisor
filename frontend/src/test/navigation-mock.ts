@@ -9,10 +9,12 @@ import { vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   push: vi.fn(),
   replace: vi.fn(),
+  pathname: "/",
 }));
 
 vi.mock("next/navigation", () => ({
   useRouter: () => mocks,
+  usePathname: () => mocks.pathname,
 }));
 
 export const routerMock = mocks;
