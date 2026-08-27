@@ -9,12 +9,14 @@ export type SectionId = "coin_prices" | "market_news" | "ai_insight" | "crypto_m
 const DEFAULT_ORDER: SectionId[] = ["coin_prices", "market_news", "ai_insight", "crypto_meme"];
 
 // Maps an onboarding content-type preference to the dashboard section it
-// should bring forward. "social" has no dedicated section in this MVP, so
-// it intentionally has no mapping and does not affect ordering.
+// should bring forward. Two intentional non-mappings:
+// - "social" has no dedicated section in this MVP.
+// - "fun" is deliberately NOT mapped to crypto_meme -- the meme is a light
+//   closing note at the end of the dashboard by design, not a section that
+//   should ever jump to the top regardless of preference.
 const CONTENT_TYPE_TO_SECTION: Partial<Record<string, SectionId>> = {
   charts: "coin_prices",
   market_news: "market_news",
-  fun: "crypto_meme",
 };
 
 /**

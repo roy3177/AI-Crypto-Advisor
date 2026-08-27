@@ -168,6 +168,26 @@ describe("DashboardPage", () => {
     preferencesApiMock.fetchMyPreferences.mockResolvedValue({
       interested_assets: ["bitcoin"],
       investor_type: "hodler",
+      content_types: ["market_news"],
+      onboarding_completed: true,
+      updated_at: "",
+    });
+
+    render(<DashboardPage />);
+
+    await screen.findByText("Fun Crypto Meme");
+    const headings = screen.getAllByRole("heading", { level: 2 }).map((el) => el.textContent);
+    expect(headings[0]).toBe("Market News");
+  });
+
+  it("never moves the meme to the front, even when 'fun' is preferred", async () => {
+    // Deliberate design choice (see dashboard-ordering.ts): the meme is a
+    // lighthearted closing note, not a section that jumps to the top.
+    marketApiMock.fetchPrices.mockResolvedValue({ items: [], status: "live", generated_at: "", content_key: "prices::2026-01-01" });
+    marketApiMock.fetchNews.mockResolvedValue({ items: [], status: "fallback", generated_at: "" });
+    preferencesApiMock.fetchMyPreferences.mockResolvedValue({
+      interested_assets: ["bitcoin"],
+      investor_type: "hodler",
       content_types: ["fun"],
       onboarding_completed: true,
       updated_at: "",
@@ -177,7 +197,7 @@ describe("DashboardPage", () => {
 
     await screen.findByText("Fun Crypto Meme");
     const headings = screen.getAllByRole("heading", { level: 2 }).map((el) => el.textContent);
-    expect(headings[0]).toBe("Fun Crypto Meme");
+    expect(headings[headings.length - 1]).toBe("Fun Crypto Meme");
   });
 
   it("shows a personalization summary once preferences load", async () => {

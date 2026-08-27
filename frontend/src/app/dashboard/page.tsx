@@ -148,7 +148,7 @@ function DashboardContent() {
   return (
     <div className="relative flex min-h-screen flex-col">
       <RadialBackground />
-      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 p-8">
+      <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 p-8">
         <AppHeader />
 
         <main className="flex flex-col gap-6">
