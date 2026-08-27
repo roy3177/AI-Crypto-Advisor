@@ -27,7 +27,7 @@ interface MemeCardProps {
 export function MemeCard({ data, isLoading, error, currentVote }: MemeCardProps) {
   return (
     <section className={`${cardClassName} items-center`}>
-      <h2 className="self-start text-2xl font-bold">Fun Crypto Meme</h2>
+      <h2 className="self-start text-3xl font-bold">Fun Crypto Meme</h2>
 
       {isLoading && <p className="text-base text-muted">Loading today&apos;s meme...</p>}
       {error && (
@@ -44,7 +44,7 @@ export function MemeCard({ data, isLoading, error, currentVote }: MemeCardProps)
             alt={data.alt_text}
             className="aspect-square w-full max-w-sm rounded-lg border border-surface-border object-cover"
           />
-          <p className="text-base font-semibold">{data.title}</p>
+          <p className="text-lg font-semibold">{data.title}</p>
           <FeedbackButtons sectionType="crypto_meme" contentKey={data.content_key} initialVote={currentVote} />
         </>
       )}

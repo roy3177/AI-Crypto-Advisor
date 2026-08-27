@@ -33,7 +33,7 @@ export function AiInsightCard({ data, isLoading, error, currentVote }: AiInsight
           <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft">
             <Sparkles className="h-5 w-5 text-accent" />
           </span>
-          <h2 className="text-2xl font-bold">{data?.title ?? "AI Insight of the Day"}</h2>
+          <h2 className="text-3xl font-bold">{data?.title ?? "AI Insight of the Day"}</h2>
           {data?.source === "fallback" && <span className={badgeClassName}>Temporarily unavailable</span>}
         </div>
       </div>
@@ -45,9 +45,9 @@ export function AiInsightCard({ data, isLoading, error, currentVote }: AiInsight
         </p>
       )}
 
-      {data && <p className="whitespace-pre-line text-base">{data.content}</p>}
+      {data && <p className="whitespace-pre-line text-lg">{data.content}</p>}
 
-      {data && <p className="border-t border-surface-border pt-3 text-sm text-muted">{data.disclaimer}</p>}
+      {data && <p className="border-t border-surface-border pt-3 text-base text-muted">{data.disclaimer}</p>}
 
       {data?.content_key && (
         <FeedbackButtons sectionType="ai_insight" contentKey={data.content_key} initialVote={currentVote} />

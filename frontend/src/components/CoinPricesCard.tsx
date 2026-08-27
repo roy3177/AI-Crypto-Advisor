@@ -29,21 +29,21 @@ export function CoinPricesCard({ data, isLoading, error, currentVote }: CoinPric
   return (
     <section className={cardClassName}>
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Coin Prices</h2>
+        <h2 className="text-3xl font-bold">Coin Prices</h2>
         {data && (
           <FeedbackButtons sectionType="coin_prices" contentKey={data.content_key} initialVote={currentVote} />
         )}
       </div>
 
-      {isLoading && <p className="text-sm text-muted">Loading prices...</p>}
+      {isLoading && <p className="text-base text-muted">Loading prices...</p>}
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-base text-danger">
           {error}
         </p>
       )}
 
       {data && data.status === "unavailable" && (
-        <p className="text-sm text-muted">Prices are temporarily unavailable.</p>
+        <p className="text-base text-muted">Prices are temporarily unavailable.</p>
       )}
 
       {data && data.items.length === 0 && data.status !== "unavailable" && !isLoading && (
@@ -56,7 +56,7 @@ export function CoinPricesCard({ data, isLoading, error, currentVote }: CoinPric
             glow={false}
             wrapperClassName="w-24"
           />
-          <p className="text-sm text-muted">No assets selected.</p>
+          <p className="text-base text-muted">No assets selected.</p>
         </div>
       )}
 
@@ -71,17 +71,17 @@ export function CoinPricesCard({ data, isLoading, error, currentVote }: CoinPric
                     {coin.symbol.slice(0, 3)}
                   </span>
                   <span>
-                    <span className="block font-semibold leading-tight">{coin.name}</span>
-                    <span className="block text-sm text-muted">{coin.symbol}</span>
+                    <span className="block text-lg font-semibold leading-tight">{coin.name}</span>
+                    <span className="block text-base text-muted">{coin.symbol}</span>
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="block font-semibold leading-tight">
+                  <span className="block text-lg font-semibold leading-tight">
                     {coin.price_usd !== null ? usdFormatter.format(coin.price_usd) : "N/A"}
                   </span>
                   {coin.change_24h_percent !== null && (
                     <span
-                      className={`flex items-center justify-end gap-0.5 text-sm font-semibold ${isUp ? "text-success" : "text-danger"}`}
+                      className={`flex items-center justify-end gap-0.5 text-base font-semibold ${isUp ? "text-success" : "text-danger"}`}
                     >
                       {isUp ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
                       {isUp ? "+" : ""}
@@ -95,7 +95,7 @@ export function CoinPricesCard({ data, isLoading, error, currentVote }: CoinPric
         </ul>
       )}
 
-      {data && data.status === "cached" && <p className="text-xs text-muted">Showing recently cached prices.</p>}
+      {data && data.status === "cached" && <p className="text-sm text-muted">Showing recently cached prices.</p>}
     </section>
   );
 }

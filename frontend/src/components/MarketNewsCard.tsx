@@ -27,13 +27,13 @@ export function MarketNewsCard({ data, isLoading, error, getVote }: MarketNewsCa
   return (
     <section className={cardClassName}>
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Market News</h2>
+        <h2 className="text-3xl font-bold">Market News</h2>
         {data?.status === "fallback" && <span className={badgeClassName}>Offline content</span>}
       </div>
 
-      {isLoading && <p className="text-sm text-muted">Loading news...</p>}
+      {isLoading && <p className="text-base text-muted">Loading news...</p>}
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-base text-danger">
           {error}
         </p>
       )}
@@ -48,14 +48,14 @@ export function MarketNewsCard({ data, isLoading, error, getVote }: MarketNewsCa
             glow={false}
             wrapperClassName="w-24"
           />
-          <p className="text-sm text-muted">No news available right now.</p>
+          <p className="text-base text-muted">No news available right now.</p>
         </div>
       )}
 
       {data && data.items.length > 0 && (
         <ul className="flex flex-col divide-y divide-surface-border">
           {data.items.map((article) => (
-            <li key={article.id} className="flex flex-col gap-1.5 py-4 text-base first:pt-0 last:pb-0">
+            <li key={article.id} className="flex flex-col gap-1.5 py-4 text-lg first:pt-0 last:pb-0">
               {article.url ? (
                 <a
                   href={article.url}
@@ -68,8 +68,8 @@ export function MarketNewsCard({ data, isLoading, error, getVote }: MarketNewsCa
               ) : (
                 <p className="font-semibold">{article.title}</p>
               )}
-              {article.summary && <p className="text-muted">{article.summary}</p>}
-              {article.source_name && <p className="text-sm text-muted">{article.source_name}</p>}
+              {article.summary && <p className="text-base text-muted">{article.summary}</p>}
+              {article.source_name && <p className="text-base text-muted">{article.source_name}</p>}
               <FeedbackButtons
                 sectionType="market_news"
                 contentKey={article.content_key}

@@ -10,7 +10,7 @@
 export const cardClassName =
   "flex flex-col gap-4 rounded-xl border border-surface-border bg-surface p-7 shadow-card transition-shadow hover:shadow-card-hover";
 
-export const badgeClassName = "rounded-full bg-accent-soft px-3 py-1 text-sm font-medium text-accent";
+export const badgeClassName = "rounded-full bg-accent-soft px-3 py-1 text-base font-medium text-accent";
 
 /** Shared with Button.tsx, and reused directly on `<Link>` elements that
  * need to look like a button (Next.js Link can't render as a <button>). */
