@@ -27,16 +27,20 @@ export function AppHeader() {
   const showEditPreferences = user?.onboarding_completed && pathname !== "/onboarding";
 
   return (
-    <header className="flex items-center justify-between border-b border-surface-border pb-4">
-      <Wordmark size="lg" />
-      <div className="flex items-center gap-3">
+    <header className="flex items-center justify-between gap-x-2 gap-y-2 border-b border-surface-border pb-4">
+      <Wordmark />
+      <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
         <ThemeToggle />
         {showEditPreferences && (
-          <Link href="/onboarding" className={`${buttonBaseClassName} ${buttonVariantClassName.ghost} !text-base px-2 py-1`}>
-            <Settings className="h-4 w-4" /> Edit preferences
+          <Link
+            href="/onboarding"
+            aria-label="Edit preferences"
+            className={`${buttonBaseClassName} ${buttonVariantClassName.ghost} !text-base px-2 py-1`}
+          >
+            <Settings className="h-4 w-4" /> <span className="hidden sm:inline">Edit preferences</span>
           </Link>
         )}
-        {user && <span className="hidden text-base text-muted sm:inline">{user.name}</span>}
+        {user && <span className="hidden text-base text-muted md:inline">{user.name}</span>}
         <Button type="button" variant="ghost" onClick={logout} className="!text-base px-2 py-1">
           Log out
         </Button>
