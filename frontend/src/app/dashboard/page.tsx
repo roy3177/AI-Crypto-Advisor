@@ -20,6 +20,7 @@ import { CoinPricesCard } from "@/components/CoinPricesCard";
 import { MarketNewsCard } from "@/components/MarketNewsCard";
 import { MemeCard } from "@/components/MemeCard";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { RadialBackground } from "@/components/RadialBackground";
 import { ApiError } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
 import { orderDashboardSections, type SectionId } from "@/lib/dashboard-ordering";
@@ -141,26 +142,29 @@ function DashboardContent() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-6 p-8">
-      <AppHeader />
+    <div className="relative flex min-h-screen flex-col">
+      <RadialBackground />
+      <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 p-8">
+        <AppHeader />
 
-      <main className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Welcome back, {user?.name}</h1>
-          {preferences && (
-            <p className="mt-1 text-sm text-muted">
-              Showing content for a <span className="font-medium text-foreground">{preferences.investor_type}</span>{" "}
-              interested in {preferences.interested_assets.join(", ")}.
-            </p>
-          )}
-        </div>
-
-        {sectionOrder.map((sectionId, index) => (
-          <div key={sectionId} className={`animate-fade-up stagger-${Math.min(index + 1, 4)}`}>
-            {sections[sectionId]}
+        <main className="flex flex-col gap-6">
+          <div>
+            <h1 className="text-4xl font-extrabold tracking-tight">Welcome back, {user?.name}</h1>
+            {preferences && (
+              <p className="mt-2 text-lg text-muted">
+                Showing content for a <span className="font-semibold text-foreground">{preferences.investor_type}</span>{" "}
+                interested in {preferences.interested_assets.join(", ")}.
+              </p>
+            )}
           </div>
-        ))}
-      </main>
+
+          {sectionOrder.map((sectionId, index) => (
+            <div key={sectionId} className={`animate-fade-up stagger-${Math.min(index + 1, 4)}`}>
+              {sections[sectionId]}
+            </div>
+          ))}
+        </main>
+      </div>
     </div>
   );
 }

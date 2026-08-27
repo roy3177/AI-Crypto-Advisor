@@ -14,7 +14,7 @@ interface FormFieldProps {
  * and behavior only need to be defined once. */
 export function FormField({ label, type = "text", value, onChange, required, minLength, autoComplete }: FormFieldProps) {
   return (
-    <label className="flex flex-col gap-1.5 text-sm font-medium">
+    <label className="flex flex-col gap-2 text-base font-semibold">
       {label}
       <input
         type={type}

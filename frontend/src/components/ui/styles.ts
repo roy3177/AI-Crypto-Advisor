@@ -4,9 +4,9 @@
  * semantically-correct `<section>` element instead of a generic `<div>`.
  */
 export const cardClassName =
-  "flex flex-col gap-3 rounded-xl border border-surface-border bg-surface p-5 shadow-card transition-shadow hover:shadow-card-hover";
+  "flex flex-col gap-4 rounded-xl border border-surface-border bg-surface p-7 shadow-card transition-shadow hover:shadow-card-hover";
 
-export const badgeClassName = "rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent";
+export const badgeClassName = "rounded-full bg-accent-soft px-3 py-1 text-sm font-medium text-accent";
 
 /** Shared with Button.tsx, and reused directly on `<Link>` elements that
  * need to look like a button (Next.js Link can't render as a <button>). */
@@ -16,8 +16,8 @@ export const buttonBaseClassName =
 export const buttonVariantClassName = {
   primary: "bg-accent text-accent-foreground hover:bg-accent-hover",
   secondary: "border border-surface-border bg-surface text-foreground hover:bg-accent-soft",
-  ghost: "text-muted hover:text-foreground",
+  ghost: "font-semibold text-foreground hover:text-accent",
 } as const;
 
 export const inputClassName =
-  "rounded-lg border border-surface-border bg-surface px-3 py-2 text-base text-foreground outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/30";
+  "rounded-xl border border-surface-border bg-surface px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/30";

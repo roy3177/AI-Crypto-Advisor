@@ -118,3 +118,32 @@
 @utility stagger-4 {
   animation-delay: 0.32s;
 }
+
+/*
+ * Vertical marquee (home page hero): a column of coin-name pills scrolling
+ * continuously. The list rendered inside is the source items duplicated
+ * once (see Marquee.tsx) -- animating from translateY(0) to
+ * translateY(-50%) then looping is exactly what makes that seamless: at
+ * -50% the (duplicated) content lines up pixel-for-pixel with the start,
+ * so the jump back to 0% is invisible.
+ */
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+@utility animate-marquee-down {
+  animation: marquee-vertical linear infinite;
+}
+@utility animate-marquee-up {
+  animation: marquee-vertical linear infinite reverse;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-down,
+  .animate-marquee-up {
+    animation: none;
+  }
+}

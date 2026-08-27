@@ -23,25 +23,25 @@ export function AiInsightCard({ data, isLoading, error, currentVote }: AiInsight
   return (
     <section className={cardClassName}>
       <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft">
-            <Sparkles className="h-4 w-4 text-accent" />
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent-soft">
+            <Sparkles className="h-5 w-5 text-accent" />
           </span>
-          <h2 className="text-lg font-semibold">{data?.title ?? "AI Insight of the Day"}</h2>
+          <h2 className="text-2xl font-bold">{data?.title ?? "AI Insight of the Day"}</h2>
           {data?.source === "fallback" && <span className={badgeClassName}>Temporarily unavailable</span>}
         </div>
       </div>
 
-      {isLoading && <p className="text-sm text-muted">Generating your insight...</p>}
+      {isLoading && <p className="text-base text-muted">Generating your insight...</p>}
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="text-base text-danger">
           {error}
         </p>
       )}
 
-      {data && <p className="whitespace-pre-line text-sm">{data.content}</p>}
+      {data && <p className="whitespace-pre-line text-base">{data.content}</p>}
 
-      {data && <p className="border-t border-surface-border pt-3 text-xs text-muted">{data.disclaimer}</p>}
+      {data && <p className="border-t border-surface-border pt-3 text-sm text-muted">{data.disclaimer}</p>}
 
       {data?.content_key && (
         <FeedbackButtons sectionType="ai_insight" contentKey={data.content_key} initialVote={currentVote} />

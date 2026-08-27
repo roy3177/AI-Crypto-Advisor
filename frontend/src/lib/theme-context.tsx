@@ -1,7 +1,7 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 
 type Theme = "light" | "dark";
 
@@ -59,8 +59,38 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
+const noSubscription = () => () => {};
+
+/**
+ * True once the component is running on the client. `useSyncExternalStore`
+ * (rather than a `useEffect` + `setState` "mounted" flag) is the primitive
+ * React provides specifically for values that are allowed to differ
+ * between the server-rendered HTML and the client's first render --
+ * it deliberately opts this read out of hydration-mismatch checking
+ * instead of tripping one.
+ */
+function useIsClient() {
+  return useSyncExternalStore(
+    noSubscription,
+    () => true,
+    () => false,
+  );
+}
+
 export function ThemeToggle({ className = "" }: { className?: string }) {
   const { theme, toggle } = useTheme();
+
+  // The server always renders as if theme === "light" (it has no access to
+  // the client's localStorage/media-query preference), but `theme` itself
+  // is already correct on the client's very first render -- ThemeScript
+  // sets the "dark" class before hydration, and `readInitialTheme` reads
+  // it straight back. That mismatch between what the server rendered and
+  // what the client would render is a real, if harmless, hydration error.
+  // `useIsClient` keeps the first client render identical to the
+  // server's, then swaps to the real icon a tick later.
+  const isClient = useIsClient();
+  const showMoon = !isClient || theme === "light";
+
   return (
     <button
       type="button"
@@ -68,7 +98,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       aria-label="Toggle theme"
       className={`inline-flex h-9 w-9 items-center justify-center rounded-lg border border-surface-border bg-surface text-muted transition-colors hover:text-foreground hover:bg-accent-soft ${className}`}
     >
-      {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+      {showMoon ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
     </button>
   );
 }

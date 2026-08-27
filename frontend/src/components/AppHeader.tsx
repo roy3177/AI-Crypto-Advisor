@@ -12,11 +12,11 @@ export function AppHeader() {
 
   return (
     <header className="flex items-center justify-between border-b border-surface-border pb-4">
-      <Wordmark />
+      <Wordmark size="lg" />
       <div className="flex items-center gap-3">
         <ThemeToggle />
-        {user && <span className="hidden text-sm text-muted sm:inline">{user.name}</span>}
-        <Button type="button" variant="ghost" onClick={logout} className="px-2 py-1">
+        {user && <span className="hidden text-base text-muted sm:inline">{user.name}</span>}
+        <Button type="button" variant="ghost" onClick={logout} className="!text-base px-2 py-1">
           Log out
         </Button>
       </div>

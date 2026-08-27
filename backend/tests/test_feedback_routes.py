@@ -98,9 +98,29 @@ class TestAuthenticationAndOwnership:
         )
         assert response.status_code == 200
 
-        stored = db_session.query(ContentFeedback).filter(ContentFeedback.content_key == "meme:diamond-hands-01").all()
+        # Scoped to this test's own user -- querying by content_key alone
+        # would also match any pre-existing feedback other real accounts
+        # have left on this same (shared, hardcoded) example meme key.
+        stored = (
+            db_session.query(ContentFeedback)
+            .filter(
+                ContentFeedback.content_key == "meme:diamond-hands-01",
+                ContentFeedback.user_id == uuid.UUID(user_id),
+            )
+            .all()
+        )
         assert len(stored) == 1
         assert str(stored[0].user_id) == user_id
+
+        spoofed = (
+            db_session.query(ContentFeedback)
+            .filter(
+                ContentFeedback.content_key == "meme:diamond-hands-01",
+                ContentFeedback.user_id == uuid.UUID(other_id),
+            )
+            .all()
+        )
+        assert spoofed == []
 
     def test_cannot_vote_on_another_users_insight(self, client, db_session):
         owner_id, owner_headers = signup_and_login(client)

@@ -32,7 +32,7 @@ export function SelectableGrid({ options, selectedIds, onToggle }: SelectableGri
             type="button"
             aria-pressed={isSelected}
             onClick={() => onToggle(option.id)}
-            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-medium transition-all active:scale-[0.97] ${
+            className={`inline-flex items-center gap-2.5 rounded-full border px-6 py-3.5 text-lg font-medium transition-all active:scale-[0.97] ${
               isSelected
                 ? "border-accent bg-accent-soft text-accent"
                 : "border-surface-border bg-surface text-foreground hover:border-accent/40 hover:bg-accent-soft/40"

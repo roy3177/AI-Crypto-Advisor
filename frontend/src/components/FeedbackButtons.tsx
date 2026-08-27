@@ -61,13 +61,13 @@ export function FeedbackButtons({ sectionType, contentKey, initialVote }: Feedba
         aria-label="Thumbs up"
         disabled={isSaving}
         onClick={() => handleVote(1)}
-        className={`inline-flex h-8 w-8 items-center justify-center rounded-lg border transition-colors disabled:opacity-50 ${
+        className={`inline-flex h-10 w-10 items-center justify-center rounded-lg border transition-colors disabled:opacity-50 ${
           vote === 1
             ? "border-success bg-success-soft text-success"
             : "border-surface-border text-muted hover:border-success/40 hover:text-success"
         }`}
       >
-        <ThumbsUp className="h-4 w-4" />
+        <ThumbsUp className="h-5 w-5" />
         {vote === 1 && <span className="sr-only"> (selected)</span>}
       </button>
       <button
@@ -76,13 +76,13 @@ export function FeedbackButtons({ sectionType, contentKey, initialVote }: Feedba
         aria-label="Thumbs down"
         disabled={isSaving}
         onClick={() => handleVote(-1)}
-        className={`inline-flex h-8 w-8 items-center justify-center rounded-lg border transition-colors disabled:opacity-50 ${
+        className={`inline-flex h-10 w-10 items-center justify-center rounded-lg border transition-colors disabled:opacity-50 ${
           vote === -1
             ? "border-danger bg-danger-soft text-danger"
             : "border-surface-border text-muted hover:border-danger/40 hover:text-danger"
         }`}
       >
-        <ThumbsDown className="h-4 w-4" />
+        <ThumbsDown className="h-5 w-5" />
         {vote === -1 && <span className="sr-only"> (selected)</span>}
       </button>
       {error && (

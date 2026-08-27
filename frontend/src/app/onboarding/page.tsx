@@ -9,16 +9,19 @@
  * deliberately), the existing answers are preloaded.
  */
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { AppHeader } from "@/components/AppHeader";
+import { Illustration } from "@/components/Illustration";
+import { Marquee } from "@/components/Marquee";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { RadialBackground } from "@/components/RadialBackground";
 import { SelectableGrid } from "@/components/SelectableGrid";
 import { Button } from "@/components/ui/Button";
 import { ApiError } from "@/lib/api-client";
 import { useAuth } from "@/lib/auth-context";
+import { LEFT_COINS, RIGHT_COINS } from "@/lib/crypto-marquee-coins";
 import { fetchMyPreferences, fetchPreferenceOptions, saveMyPreferences, type PreferenceOptions } from "@/lib/preferences-api";
 
 const TOTAL_STEPS = 3;
@@ -155,7 +158,8 @@ function OnboardingContent() {
 
   if (isLoadingData || !options) {
     return (
-      <main className="flex min-h-screen items-center justify-center">
+      <main className="relative flex min-h-screen items-center justify-center">
+        <RadialBackground />
         <p className="text-sm text-muted">Loading...</p>
       </main>
     );
@@ -163,14 +167,15 @@ function OnboardingContent() {
 
   if (showCelebration) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-8 text-center">
-        <Image
+      <main className="relative flex min-h-screen flex-col items-center justify-center gap-4 p-8 text-center">
+        <RadialBackground />
+        <Illustration
           src="/illustrations/celebration.webp"
           alt="A cartoon bull mascot jumping happily with confetti and fireworks"
           width={480}
           height={480}
           priority
-          className="w-full max-w-[220px]"
+          wrapperClassName="w-full max-w-[220px]"
         />
         <h1 className="text-xl font-semibold tracking-tight">All set!</h1>
         <p className="text-sm text-muted">Taking you to your dashboard...</p>
@@ -179,99 +184,113 @@ function OnboardingContent() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-lg flex-col gap-6 p-8">
-      <AppHeader />
+    <div className="relative flex min-h-screen flex-col">
+      <RadialBackground />
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 p-8">
+        <AppHeader />
 
-      <main className="flex flex-1 flex-col justify-center gap-6">
-        <Image
-          src="/illustrations/onboarding-banner.webp"
-          alt="A cartoon bull mascot pointing at a checklist on a clipboard"
-          width={1040}
-          height={580}
-          priority
-          className="mx-auto w-full max-w-sm"
-        />
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Personalize your crypto dashboard</h1>
-          <p className="mt-1 text-sm text-muted">
-            Tell us what interests you so we can tailor your daily crypto content.
-          </p>
-        </div>
-
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex gap-1.5">
-            {Array.from({ length: TOTAL_STEPS }, (_, index) => (
-              <span
-                key={index}
-                className={`h-1.5 w-8 rounded-full ${index < step ? "bg-accent" : "bg-surface-border"}`}
-              />
-            ))}
-          </div>
-          <p className="text-xs font-medium uppercase tracking-wide text-muted">
-            Step {step} of {TOTAL_STEPS}
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-surface-border bg-surface p-6 shadow-card">
-          <div key={step} className="animate-fade-up">
-          {step === 1 && (
-            <fieldset className="flex flex-col gap-3">
-              <legend className="mb-1 text-sm font-medium">What crypto assets are you interested in?</legend>
-              <SelectableGrid
-                options={options.assets.map((a) => ({ id: a.id, label: a.label, sublabel: a.symbol }))}
-                selectedIds={interestedAssets}
-                onToggle={toggleAsset}
-              />
-            </fieldset>
-          )}
-
-          {step === 2 && (
-            <fieldset className="flex flex-col gap-3">
-              <legend className="mb-1 text-sm font-medium">What type of investor are you?</legend>
-              <SelectableGrid
-                options={options.investor_types}
-                selectedIds={investorType ? [investorType] : []}
-                onToggle={(id) => setInvestorType(id)}
-              />
-            </fieldset>
-          )}
-
-          {step === 3 && (
-            <fieldset className="flex flex-col gap-3">
-              <legend className="mb-1 text-sm font-medium">What kind of content would you like to see?</legend>
-              <SelectableGrid options={options.content_types} selectedIds={contentTypes} onToggle={toggleContentType} />
-            </fieldset>
-          )}
+        <main className="flex flex-1 flex-col justify-center gap-6">
+          <div className="text-center">
+            <h1 className="text-5xl font-extrabold tracking-tight">Personalize your crypto dashboard</h1>
+            <p className="mt-3 text-xl text-muted">
+              Tell us what interests you so we can tailor your daily crypto content.
+            </p>
           </div>
 
-          {stepError && (
-            <p role="alert" className="mt-4 text-center text-sm text-danger">
-              {stepError}
-            </p>
-          )}
-          {submitError && (
-            <p role="alert" className="mt-4 text-center text-sm text-danger">
-              {submitError}
-            </p>
-          )}
+          <div className="flex items-center justify-center gap-4">
+            <Marquee items={LEFT_COINS} durationSeconds={24} className="hidden lg:block" />
+            <Illustration
+              src="/illustrations/onboarding-banner.webp"
+              alt="A cartoon bull mascot pointing at a checklist on a clipboard"
+              width={1040}
+              height={580}
+              priority
+              wrapperClassName="mx-auto w-full max-w-sm"
+            />
+            <Marquee items={RIGHT_COINS} reverse durationSeconds={24} className="hidden lg:block" />
+          </div>
 
-          <div className="mt-6 flex justify-between gap-3">
-            <Button type="button" variant="ghost" onClick={goBack} disabled={step === 1} className="disabled:opacity-0">
-              <ArrowLeft className="h-4 w-4" /> Back
-            </Button>
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex gap-1.5">
+              {Array.from({ length: TOTAL_STEPS }, (_, index) => (
+                <span
+                  key={index}
+                  className={`h-1.5 w-8 rounded-full ${index < step ? "bg-accent" : "bg-surface-border"}`}
+                />
+              ))}
+            </div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-muted">
+              Step {step} of {TOTAL_STEPS}
+            </p>
+          </div>
 
-            {step < TOTAL_STEPS ? (
-              <Button type="button" onClick={goNext} className="px-7">
-                Next <ArrowRight className="h-4 w-4" />
-              </Button>
-            ) : (
-              <Button type="button" onClick={handleSubmit} disabled={isSubmitting} className="px-7">
-                {isSubmitting ? "Saving..." : "Finish"} <ArrowRight className="h-4 w-4" />
-              </Button>
+          <div className="rounded-xl border border-surface-border bg-surface p-8 shadow-card">
+            <div key={step} className="animate-fade-up">
+              {step === 1 && (
+                <fieldset className="flex flex-col gap-4">
+                  <legend className="mb-1 text-2xl font-semibold">What crypto assets are you interested in?</legend>
+                  <SelectableGrid
+                    options={options.assets.map((a) => ({ id: a.id, label: a.label, sublabel: a.symbol }))}
+                    selectedIds={interestedAssets}
+                    onToggle={toggleAsset}
+                  />
+                </fieldset>
+              )}
+
+              {step === 2 && (
+                <fieldset className="flex flex-col gap-4">
+                  <legend className="mb-1 text-2xl font-semibold">What type of investor are you?</legend>
+                  <SelectableGrid
+                    options={options.investor_types}
+                    selectedIds={investorType ? [investorType] : []}
+                    onToggle={(id) => setInvestorType(id)}
+                  />
+                </fieldset>
+              )}
+
+              {step === 3 && (
+                <fieldset className="flex flex-col gap-4">
+                  <legend className="mb-1 text-2xl font-semibold">What kind of content would you like to see?</legend>
+                  <SelectableGrid options={options.content_types} selectedIds={contentTypes} onToggle={toggleContentType} />
+                </fieldset>
+              )}
+            </div>
+
+            {stepError && (
+              <p role="alert" className="mt-4 text-center text-sm text-danger">
+                {stepError}
+              </p>
             )}
+            {submitError && (
+              <p role="alert" className="mt-4 text-center text-sm text-danger">
+                {submitError}
+              </p>
+            )}
+
+            <div className="mt-8 flex justify-between gap-3">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={goBack}
+                disabled={step === 1}
+                className="!text-lg disabled:opacity-0"
+              >
+                <ArrowLeft className="h-5 w-5" /> Back
+              </Button>
+
+              {step < TOTAL_STEPS ? (
+                <Button type="button" onClick={goNext} className="!px-10 !py-4 !text-lg">
+                  Next <ArrowRight className="h-5 w-5" />
+                </Button>
+              ) : (
+                <Button type="button" onClick={handleSubmit} disabled={isSubmitting} className="!px-10 !py-4 !text-lg">
+                  {isSubmitting ? "Saving..." : "Finish"} <ArrowRight className="h-5 w-5" />
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
