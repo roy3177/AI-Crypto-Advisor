@@ -21,9 +21,21 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.core.rate_limit import _limiter as auth_rate_limiter
 from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
+
+
+@pytest.fixture(autouse=True)
+def _reset_auth_rate_limiter():
+    """The login/signup rate limiter is a module-level singleton (see
+    `app/core/rate_limit.py`), so without a reset, signups/logins from one
+    test would count against every later test's quota in the same pytest
+    process. Runs before and after every test for a clean slate either way."""
+    auth_rate_limiter.reset()
+    yield
+    auth_rate_limiter.reset()
 
 
 @pytest.fixture(scope="session")

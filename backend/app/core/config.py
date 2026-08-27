@@ -64,7 +64,22 @@ class Settings(BaseSettings):
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
 
+_INSECURE_DEFAULT_JWT_SECRET = "changeme-in-env-file"
+
+
 @lru_cache
 def get_settings() -> Settings:
-    """Return a cached Settings instance so the environment is parsed once."""
-    return Settings()
+    """Return a cached Settings instance so the environment is parsed once.
+
+    Fails loudly at startup in production if `JWT_SECRET` was never
+    overridden -- every issued token would otherwise be forgeable by anyone
+    who reads this file (see `_INSECURE_DEFAULT_JWT_SECRET` above), and a
+    silently-insecure boot is worse than a crash-on-deploy.
+    """
+    settings = Settings()
+    if settings.environment == "production" and settings.jwt_secret == _INSECURE_DEFAULT_JWT_SECRET:
+        raise RuntimeError(
+            "JWT_SECRET is still the insecure default -- set a real, random "
+            "secret in the production environment before starting the app."
+        )
+    return settings

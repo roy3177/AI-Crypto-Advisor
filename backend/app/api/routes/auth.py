@@ -13,6 +13,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
+from app.core.rate_limit import rate_limit
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.token import TokenResponse
@@ -22,7 +23,12 @@ from app.services import auth_service
 router = APIRouter(tags=["auth"])
 
 
-@router.post("/signup", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/signup",
+    response_model=TokenResponse,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(rate_limit(5, 3600))],  # 5 signups / hour / IP -- blunts account-spam.
+)
 def signup(data: UserCreate, db: Session = Depends(get_db)) -> TokenResponse:
     try:
         user = auth_service.signup(db, data)
@@ -32,7 +38,11 @@ def signup(data: UserCreate, db: Session = Depends(get_db)) -> TokenResponse:
     return auth_service.build_token_response(user)
 
 
-@router.post("/login", response_model=TokenResponse)
+@router.post(
+    "/login",
+    response_model=TokenResponse,
+    dependencies=[Depends(rate_limit(10, 300))],  # 10 attempts / 5 min / IP -- blunts brute-force.
+)
 def login(data: UserLogin, db: Session = Depends(get_db)) -> TokenResponse:
     try:
         user = auth_service.authenticate(db, data)
