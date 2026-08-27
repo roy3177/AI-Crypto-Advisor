@@ -223,7 +223,7 @@ Live: frontend on Vercel, backend + managed PostgreSQL on Render — see [Skills
 For a reviewer to inspect stored data without production credentials:
 
 - **Local:** follow [Getting started](#getting-started), then inspect the database directly with `psql` or any Postgres client (`SELECT * FROM users;`, `SELECT * FROM content_feedback;`, etc.) — no data is hidden or write-protected for the local database owner.
-- **Production:** on request, a temporary read-only database user (or a screen-share of Render's built-in Postgres dashboard) will be shared with reviewers directly — never committed to the repository, and never the primary application credentials.
+- **Production:** a dedicated, read-only database role exists for reviewers, with no write access and no access to sensitive columns (e.g. password hashes). Credentials are shared privately on request, not published here.
 
 ## Known limitations & design decisions
 
