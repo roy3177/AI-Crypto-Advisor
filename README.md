@@ -2,12 +2,16 @@
 
 A personalized crypto-investor dashboard built for the Moveo coding assignment. Users create an account, complete a short onboarding questionnaire, and get a daily dashboard with market news, coin prices, one AI-generated insight per day, and a crypto meme — every section supports thumbs-up / thumbs-down feedback.
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-ai--crypto--advisor-6E56CF?logo=vercel&logoColor=white)](https://ai-crypto-advisor-i8oe.vercel.app)
+[![API](https://img.shields.io/badge/API-health_check-009688?logo=fastapi&logoColor=white)](https://ai-crypto-advisor-9lnf.onrender.com/health)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
 ![React](https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss&logoColor=white)
+
+**🚀 [Try the live app](https://ai-crypto-advisor-i8oe.vercel.app)** — no setup needed.
 
 > **Status:** deployed and live. Authentication, onboarding (with a dedicated edit-preferences flow), the four dashboard sections, and feedback all work end-to-end against the public URLs, covered by automated tests — see [Deployment](#deployment).
 
