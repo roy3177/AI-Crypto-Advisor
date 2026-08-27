@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Pydantic response schema for JWT auth tokens.
+
 """
 Response schema for a successful login/signup: the access token plus the
 safe user data the frontend needs to route the user correctly.

@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Root layout -- fonts, theme provider, auth provider, and the global footer.
+ */
+
 import type { Metadata } from "next";
 import { Figtree, Sora } from "next/font/google";
 import "./globals.css";

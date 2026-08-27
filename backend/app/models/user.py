@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: SQLAlchemy model for a registered user account.
+
 """
 The `users` table: one row per registered account.
 

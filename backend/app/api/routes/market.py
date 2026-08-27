@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Endpoints for personalized coin prices and market news.
+
 """
 Market-data routes: personalized coin prices and news for the
 authenticated user, based on their saved `interested_assets`. Provider

@@ -1,4 +1,8 @@
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Theme-aware radial gradient background used behind page content.
+ *
  * A soft radial glow behind page content -- white/near-black at the
  * center fading to the app's accent color at the edges. Reads the same
  * `--background`/`--accent` CSS custom properties every other component

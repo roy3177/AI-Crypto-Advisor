@@ -1,6 +1,10 @@
 "use client";
 
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: React context providing authentication state across the app.
+ *
  * Central authentication state, shared across the app via React context.
  *
  * On mount it tries `GET /api/auth/me` using whatever token is already in

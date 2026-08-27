@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: The public landing page.
+ */
+
 import { Database, ImageIcon, KeyRound, LineChart, Newspaper, ShieldCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
 

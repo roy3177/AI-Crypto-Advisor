@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: The "AI Insight of the Day" dashboard section.
+ */
+
 import { Sparkles } from "lucide-react";
 
 import { FeedbackButtons } from "@/components/FeedbackButtons";

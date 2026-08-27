@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: SQLAlchemy model for a user's onboarding preferences.
+
 """
 The `user_preferences` table: one row per user, holding onboarding answers.
 

@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Shared wrapper for the app's mascot illustrations (rounded corners, glow).
+ */
+
 import Image from "next/image";
 
 interface IllustrationProps {

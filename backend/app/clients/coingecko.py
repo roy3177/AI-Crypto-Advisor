@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: HTTP client for fetching live coin prices from CoinGecko.
+
 """
 CoinGecko client -- coin prices.
 

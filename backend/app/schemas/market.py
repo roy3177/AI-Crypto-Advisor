@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Pydantic response schemas for coin prices and market news.
+
 """
 Normalized internal response schemas for market data. These are the shapes
 the frontend actually receives -- provider-specific fields never leak

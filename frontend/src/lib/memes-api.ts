@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: API function for fetching a random meme.
+ */
+
 import { apiFetch } from "./api-client";
 
 export interface Meme {

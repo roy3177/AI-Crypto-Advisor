@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Continuously scrolling column of coin-name pills.
+ */
+
 interface MarqueeProps {
   items: string[];
   reverse?: boolean;

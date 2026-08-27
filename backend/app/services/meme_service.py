@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Business logic for selecting a random meme from the curated catalog.
+
 """
 Meme selection: a small curated local catalog (no scraping, no hotlinking
 unreliable image hosts -- see /build-crypto-dashboard SKILL.md), picked

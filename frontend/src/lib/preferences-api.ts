@@ -1,4 +1,8 @@
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: API functions for onboarding options and saving/reading preferences.
+ *
  * Preferences / onboarding API calls, built on the centralized `apiFetch`.
  */
 import { apiFetch } from "./api-client";

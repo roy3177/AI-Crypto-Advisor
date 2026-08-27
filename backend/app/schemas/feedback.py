@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Pydantic request/response schemas for the feedback endpoints.
+
 """
 Pydantic schemas for thumbs-up / thumbs-down feedback.
 

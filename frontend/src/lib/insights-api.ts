@@ -1,4 +1,8 @@
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: API function for fetching the daily AI insight.
+ *
  * Daily AI insight API call, built on the centralized `apiFetch`.
  */
 import { apiFetch } from "./api-client";

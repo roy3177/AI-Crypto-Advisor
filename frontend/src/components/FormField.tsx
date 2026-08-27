@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Shared labeled input used by the login/signup forms.
+ */
+
 import { inputClassName } from "@/components/ui/styles";
 
 interface FormFieldProps {

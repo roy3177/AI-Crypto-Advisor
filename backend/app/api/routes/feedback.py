@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Endpoints for upserting and listing the authenticated user's thumbs-up/down feedback.
+
 """
 Feedback routes: PUT /api/feedback (upsert a vote), GET /api/feedback/me
 (list the authenticated user's own votes, optionally filtered).

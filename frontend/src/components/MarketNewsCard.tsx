@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: The "Market News" dashboard section.
+ */
+
 import { FeedbackButtons } from "@/components/FeedbackButtons";
 import { Illustration } from "@/components/Illustration";
 import { badgeClassName, cardClassName } from "@/components/ui/styles";

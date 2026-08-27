@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Centralized application settings loaded from environment variables.
+
 """
 Centralized application configuration.
 

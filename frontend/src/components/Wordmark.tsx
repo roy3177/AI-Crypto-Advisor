@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: The app's logo and name, used in headers and auth pages.
+ */
+
 import { LineChart } from "lucide-react";
 import Link from "next/link";
 

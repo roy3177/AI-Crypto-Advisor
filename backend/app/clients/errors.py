@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Shared exception types for external provider client failures.
+
 """
 Provider-agnostic error categories.
 

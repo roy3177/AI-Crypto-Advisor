@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: API functions for upserting and listing feedback.
+ */
+
 import { apiFetch } from "./api-client";
 
 export type SectionType = "market_news" | "coin_prices" | "ai_insight" | "crypto_meme";

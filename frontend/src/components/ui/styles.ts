@@ -1,4 +1,8 @@
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Shared class-name constants (card, badge, button, input) used across components.
+ *
  * Shared class-name fragments for the dashboard section cards. Kept as a
  * plain string (not a wrapping component) so callers can keep using the
  * semantically-correct `<section>` element instead of a generic `<div>`.

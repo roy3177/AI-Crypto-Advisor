@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Shared lists of cryptocurrency names used by the Marquee component.
+ */
+
 // A broad, real sample of well-known cryptocurrencies (not limited to the
 // 5 the app's onboarding actually supports) -- purely decorative labels
 // for the scrolling Marquee columns beside a page's hero content, no

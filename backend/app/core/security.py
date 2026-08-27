@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Password hashing (bcrypt) and JWT creation/validation utilities.
+
 """
 Password hashing and JWT handling -- the only place in the codebase that
 should touch either.

@@ -1,6 +1,10 @@
 "use client";
 
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: The personalized dashboard page -- all four mandatory sections.
+ *
  * The dashboard: all four mandatory sections (Market News, Coin Prices,
  * AI Insight, Fun Crypto Meme) are real, each backed by its own endpoint.
  *

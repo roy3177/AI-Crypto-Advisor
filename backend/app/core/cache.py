@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Small in-memory TTL cache used to avoid re-fetching prices/news on every request.
+
 """
 A minimal in-memory, per-process TTL cache.
 

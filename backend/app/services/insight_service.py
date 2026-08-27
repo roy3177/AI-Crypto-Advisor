@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Business logic for generating, grounding, and persisting the daily AI insight.
+
 """
 Daily AI insight orchestration.
 

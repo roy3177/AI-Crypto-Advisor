@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Public liveness-check endpoint.
+
 """Liveness check used by the hosting platform and by manual smoke tests."""
 from fastapi import APIRouter
 

@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: FastAPI dependency for extracting and validating the current authenticated user from a JWT bearer token.
+
 """
 Shared FastAPI dependencies: the database session and the current-user
 resolver. Every protected route depends on `get_current_user` instead of

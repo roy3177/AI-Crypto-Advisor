@@ -1,4 +1,8 @@
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Small wrapper around localStorage for the JWT access token.
+ *
  * Single place that touches the stored access token.
  *
  * Stored in `localStorage` for this MVP (see AuthProvider / SKILL.md for the

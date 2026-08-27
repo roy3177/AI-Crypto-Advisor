@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Light/dark theme state, toggle, and the pre-hydration theme script.
+ */
 import { Moon, Sun } from "lucide-react";
 import { createContext, useContext, useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 

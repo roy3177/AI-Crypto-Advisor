@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: SQLAlchemy model for a user's thumbs-up/down vote on a piece of dashboard content.
+
 """
 The `content_feedback` table: one row per (user, section, content) vote.
 

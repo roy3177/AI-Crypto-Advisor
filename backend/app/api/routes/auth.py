@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Signup, login, and current-user endpoints.
+
 """
 Authentication routes: signup, login, and the current-user lookup.
 

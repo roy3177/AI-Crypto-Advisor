@@ -1,4 +1,8 @@
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: API functions for fetching coin prices and market news.
+ *
  * Market-data API calls, built on the centralized `apiFetch`.
  */
 import { apiFetch } from "./api-client";

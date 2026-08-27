@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Business logic for fetching and normalizing personalized coin prices and news.
+
 """
 Market-data service: applies caching, calls provider clients, normalizes
 their responses into the internal schemas, and falls back safely when a

@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Shared top bar for authenticated pages.
+ */
 import { Button } from "@/components/ui/Button";
 import { Wordmark } from "@/components/Wordmark";
 import { useAuth } from "@/lib/auth-context";

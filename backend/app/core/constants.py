@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Shared constant values (supported assets, investor types, content types) used across the backend.
+
 """
 Shared enum-like constants for onboarding and feedback.
 

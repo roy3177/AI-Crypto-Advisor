@@ -1,6 +1,10 @@
 "use client";
 
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Route guard that redirects unauthenticated users to login.
+ *
  * Wraps a page that requires a logged-in user.
  *
  * Waits for the initial `/api/auth/me` check (`isLoading`) before deciding

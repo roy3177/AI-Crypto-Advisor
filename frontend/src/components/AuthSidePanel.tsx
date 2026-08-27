@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: The dark brand panel shown beside the login/signup form.
+ */
+
 import { ImageIcon, LineChart, Newspaper, Sparkles } from "lucide-react";
 
 import { Illustration } from "@/components/Illustration";

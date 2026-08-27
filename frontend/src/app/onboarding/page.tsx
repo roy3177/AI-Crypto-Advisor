@@ -1,6 +1,10 @@
 "use client";
 
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: The 3-step onboarding questionnaire.
+ *
  * First-login onboarding: a short three-step questionnaire (assets,
  * investor type, content preferences) that saves to
  * `PUT /api/preferences/me` and completes onboarding on the backend.

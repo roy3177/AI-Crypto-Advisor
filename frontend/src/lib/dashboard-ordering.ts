@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Pure function that reorders dashboard sections based on saved content-type preferences.
+ */
+
 export type SectionId = "coin_prices" | "market_news" | "ai_insight" | "crypto_meme";
 
 const DEFAULT_ORDER: SectionId[] = ["coin_prices", "market_news", "ai_insight", "crypto_meme"];

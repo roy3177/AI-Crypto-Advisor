@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Endpoints for onboarding preference options and saving/reading the authenticated user's preferences.
+
 """
 Onboarding / preferences routes.
 

@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Pydantic request/response schemas for user signup/login and the current-user response.
+
 """
 Pydantic schemas for the User entity.
 

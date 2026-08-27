@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: SQLAlchemy declarative base shared by all ORM models.
+
 """
 SQLAlchemy engine and declarative base.
 

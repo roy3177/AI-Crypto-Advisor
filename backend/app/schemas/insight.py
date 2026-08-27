@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Pydantic response schema for the daily AI insight.
+
 """
 Response schema for the daily AI insight.
 

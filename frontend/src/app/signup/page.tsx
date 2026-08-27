@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Signup page with the split auth panel.
+ */
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 

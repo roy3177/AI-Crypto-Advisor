@@ -1,4 +1,8 @@
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: API functions for signup, login, and fetching the current user.
+ *
  * Auth-specific calls, built on the centralized `apiFetch`. Keeping these
  * here (rather than inline in components) means the request shape only
  * needs to match the backend in one place.

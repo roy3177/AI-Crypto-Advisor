@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Custom 404 page.
+ */
+
 import Link from "next/link";
 
 import { Illustration } from "@/components/Illustration";

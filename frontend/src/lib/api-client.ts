@@ -1,4 +1,8 @@
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Centralized fetch wrapper for every request to the backend API.
+ *
  * Centralized API client.
  *
  * Every request to the FastAPI backend must go through `apiFetch` instead of

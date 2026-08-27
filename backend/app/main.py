@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: FastAPI application entry point -- settings, CORS, and router registration.
+
 """
 FastAPI application entry point.
 
@@ -35,9 +39,3 @@ app.include_router(market.router, prefix="/api/market")
 app.include_router(insights.router, prefix="/api/insights")
 app.include_router(memes.router, prefix="/api/memes")
 app.include_router(feedback.router, prefix="/api/feedback")
-
-# Future routers (all under /api, added in later phases):
-# app.include_router(market.router, prefix="/api/market", tags=["market"])
-# app.include_router(insights.router, prefix="/api/insights", tags=["insights"])
-# app.include_router(feedback.router, prefix="/api/feedback", tags=["feedback"])
-# app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])

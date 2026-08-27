@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: The "Fun Crypto Meme" dashboard section.
+ */
+
 import { FeedbackButtons } from "@/components/FeedbackButtons";
 import { cardClassName } from "@/components/ui/styles";
 import type { Meme } from "@/lib/memes-api";

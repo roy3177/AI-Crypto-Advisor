@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Reusable thumbs-up/down control used by every dashboard section.
+ */
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { useState } from "react";
 

@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Endpoint for fetching (or generating) the authenticated user's daily AI insight.
+
 """
 Daily AI insight route.
 """

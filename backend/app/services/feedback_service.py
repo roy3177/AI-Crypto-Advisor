@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: Business logic for upserting feedback votes with ownership and validation rules.
+
 """
 Thumbs-up / thumbs-down feedback: upsert business logic.
 

@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: HTTP client for generating AI insights via OpenRouter, with timeout and safe fallback handling.
+
 """
 OpenRouter client -- text generation for the daily AI insight.
 

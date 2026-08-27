@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Reusable toggleable chip grid used by the onboarding questionnaire.
+ */
+
 import { Check } from "lucide-react";
 
 interface SelectableOption {

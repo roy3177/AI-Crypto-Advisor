@@ -1,4 +1,8 @@
 /**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Global site footer shown on every page.
+ *
  * Rendered once, globally, from the root layout -- appears at the bottom
  * of every page. Deliberately minimal (a single centered line) so it
  * stays out of the way on focused screens like login/onboarding, not

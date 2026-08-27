@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: Shared button component with variant styling.
+ */
+
 import type { ButtonHTMLAttributes } from "react";
 
 import { buttonBaseClassName, buttonVariantClassName } from "./styles";

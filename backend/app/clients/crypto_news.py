@@ -1,3 +1,7 @@
+# @author: Roy Meoded
+# @date: 27.08.2026
+# @description: HTTP client for fetching market news from CryptoPanic, with a static fallback.
+
 """
 CryptoPanic client -- market news.
 

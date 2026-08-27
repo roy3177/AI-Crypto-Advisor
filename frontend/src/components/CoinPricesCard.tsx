@@ -1,3 +1,9 @@
+/**
+ * @author: Roy Meoded
+ * @date: 27.08.2026
+ * @description: The "Coin Prices" dashboard section.
+ */
+
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 import { FeedbackButtons } from "@/components/FeedbackButtons";
